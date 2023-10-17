@@ -1,4 +1,48 @@
 {
-    "lastUpdate": 1697559393,
-    "bounties": []
+    "lastUpdate": 1697560412,
+    "bounties": [
+        {
+            "gaugeAddress": "0xd8b712d29381748db89c36bca0138d7c75866ddf",
+            "gauge": {
+                "address": "0xd8b712d29381748db89c36bca0138d7c75866ddf",
+                "name": "MIM+3Crv ",
+                "gaugeWeight": {
+                    "type": "BigNumber",
+                    "hex": "0x0f4e20fc6c20714e869400"
+                },
+                "hasNoCrv": false
+            },
+            "activePeriod": {
+                "type": "BigNumber",
+                "hex": "0x65273700"
+            },
+            "rewards": [
+                {
+                    "amount": {
+                        "type": "BigNumber",
+                        "hex": "0x0557062cc3c5e708"
+                    },
+                    "address": "0x090185f2135308BaD17527004364eBcC2D37e5F6",
+                    "logo": "https://raw.githubusercontent.com/curvefi/curve-assets/b434dafc3c21296dd323915cb1a0d0c9d238643c/images/assets/0x090185f2135308bad17527004364ebcc2d37e5f6.png",
+                    "symbol": "SPELL",
+                    "price": 0.00042975,
+                    "decimals": 18,
+                    "claimableAmountUSD": 0
+                }
+            ],
+            "claimsPerGauge": {
+                "type": "BigNumber",
+                "hex": "0x0a662390e86f9f1bc33ae1b6"
+            },
+            "totalRewardsPerGauge": {
+                "type": "BigNumber",
+                "hex": "0x0a679b920f5c030a4a250000"
+            },
+            "totalReward": 1775631,
+            "totalRewardsDollar": 763.07742225,
+            "pricePerVeCRV": 4.124109716400293e-05,
+            "apr": 0.004880003487346008,
+            "totalVotes": 18502840.364642296
+        }
+    ]
 }
