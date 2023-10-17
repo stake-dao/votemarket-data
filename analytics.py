@@ -24,6 +24,20 @@ def analytics(config):
             outfile.write(json_object)
 
 def main():
+    # only once per day
+    f = open('./analytics/config.json')
+ 
+    config = json.load(f)
+    now = int(time.time())
+
+    if config["latestRun"] + (60 * 60 * 24) - 1 > now:
+        return
+    
+    config["latestRun"] = now
+    json_object = json.dumps(config, indent=4)
+    with open("./analytics/config.json", "w") as outfile:
+        outfile.write(json_object)
+
     urlsResponse = requests.get("https://votemarket.stakedao.org/api/cache")
     if urlsResponse.status_code != 200:
         return
