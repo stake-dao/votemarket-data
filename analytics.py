@@ -5,7 +5,7 @@ def analytics(config):
 
     protocols = config["protocols"]
     for protocol in protocols:
-        analyticsResponse = requests.get(url="https://votemarket.stakedao.org/api/analytics/global?protocolKey="+protocol["key"], timeout=600)
+        analyticsResponse = requests.get(url="https://votemarket.stakedao.org/api/analytics/global?protocolKey="+protocol["key"], timeout=1200)
         if analyticsResponse.status_code != 200:
             continue
 
