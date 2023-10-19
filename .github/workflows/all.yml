@@ -23,8 +23,5 @@ jobs:
       - name: execute bounties.py # run bounties.py
         run: python bounties.py
 
-      - name: execute analytics.ps # run analytics.py
-        run: python analytics.py
-
       # Commit all changed files back to the repository
       - uses: stefanzweifel/git-auto-commit-action@v4
