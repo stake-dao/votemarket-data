@@ -2,7 +2,7 @@ name: Votemarket bounties closed
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 * * * *' # Each hour
+    - cron: '0 0 * * *' # Every day
 jobs:
   build:
     runs-on: ubuntu-latest
