@@ -1,4 +1,4 @@
-import requests, logging, os, time, json
+import requests, logging, json
 from web3 import Web3
 
 def load_json(name):
@@ -9,7 +9,7 @@ def isNullAddress(addr):
     return addr == "0x0000000000000000000000000000000000000000"
     
 def bounties(config): 
-    w3 = Web3(Web3.HTTPProvider('https://mainnet.infura.io/v3/4c7ecc406ff04ac68659d8309fd7db47'))
+    w3 = Web3(Web3.HTTPProvider('https://eth.public-rpc.com'))
     if w3.isConnected() == False:
         logging.error("RPC down")
         return
@@ -24,12 +24,36 @@ def bounties(config):
         nextID = platformContract.functions.nextID().call()
         
         bountiesClosed = []
+        bountiesClosable = []
         for i in range(nextID):
+
+            # Fetch bounty
             bounty = platformContract.functions.getBounty(i).call()
+
+            # If closed, we mark it as closed and we skip 
             if isNullAddress(bounty[1]):
                 bountiesClosed.append(i)
+                continue
 
-        bountiesClosedData[Web3.toChecksumAddress(platform["contract"])] = bountiesClosed
+            # We have to check if the bounty is closable
+            # Check if we have an upgrade in queue
+            upgrade = platformContract.functions.upgradeBountyQueue(i).call()
+            currentPeriod = platformContract.functions.getCurrentPeriod().call()
+            isClosable = False
+            if upgrade[0] > 0:
+                isClosable = upgrade[3] <= currentPeriod
+            else:
+                isClosable = bounty[4] <= currentPeriod
+
+            if isClosable:
+                bountyClosable = {}
+                bountyClosable["id"] = i
+                bountyClosable["manager"] = bounty[1]
+                bountiesClosable.append(bountyClosable)
+
+        bountiesClosedData[Web3.toChecksumAddress(platform["contract"])] = {}
+        bountiesClosedData[Web3.toChecksumAddress(platform["contract"])]["bountiesClosed"] = bountiesClosed
+        bountiesClosedData[Web3.toChecksumAddress(platform["contract"])]["bountiesClosable"] = bountiesClosable
     
     json_object = json.dumps(bountiesClosedData, indent=4)
     with open("./bounties/closed.json", "w") as outfile:
