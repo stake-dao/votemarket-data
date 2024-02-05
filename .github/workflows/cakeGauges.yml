@@ -2,7 +2,7 @@ name: Cake gauges
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 3-22 * * *'
+    - cron: '*/15 1-23 * * *' # every 15 min between 1h AM and 11 PM
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -25,6 +25,9 @@ jobs:
 
       - name: execute sushiTokens.py
         run: python sushiTokens.py
+
+      - name: execute cakeTvls.py
+        run: python cakeTvls.py
 
       # Commit all changed files back to the repository
       - uses: stefanzweifel/git-auto-commit-action@v4

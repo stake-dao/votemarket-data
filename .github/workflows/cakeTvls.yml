@@ -1,8 +1,9 @@
-name: Votemarket bounties closed
+name: Cake tvls
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *' # Every day
+    - cron: '15,30,45 23 * * *' # At 11:15 / 11:30 / 11:45 PM every day
+    - cron: '30,45 0 * * *' # At 0:30 / 0:45 AM every day
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,12 +21,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: execute bountiesClosed.py # run bounties.py
-        run: python bountiesClosed.py
+      - name: execute cakeTvls.py
+        run: python cakeTvls.py
 
       # Commit all changed files back to the repository
       - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          # Optional. Options used by `git-push`.
-          # See https://git-scm.com/docs/git-push#_options
-          push_options: '--force'
