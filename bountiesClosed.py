@@ -60,7 +60,7 @@ def bounties(config):
         outfile.write(json_object)
 
 def main():
-    urlsResponse = requests.get("https://bribe-platform-git-feature-eng-339-vm-add-bsc-stake-capital.vercel.app/platforms/index.json")
+    urlsResponse = requests.get("https://votemarket.stakedao.org/platforms/index.json")
     if urlsResponse.status_code != 200:
         return
 
