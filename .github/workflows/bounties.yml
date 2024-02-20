@@ -26,6 +26,8 @@ jobs:
 
       - name: Commit and push changes to bribes repo
         run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Stake DAO Automation"
           git add .
           git commit -m "Add bounties"
           git pull --rebase
