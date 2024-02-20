@@ -26,9 +26,9 @@ jobs:
 
       - name: Commit and push changes to bribes repo
         run: |
-          git pull --rebase
           git add .
           git commit -m "Add bounties"
+          git pull --rebase
           git push origin main
         shell: bash
         if: always()
