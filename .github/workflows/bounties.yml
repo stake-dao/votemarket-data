@@ -10,8 +10,6 @@ jobs:
     steps:
       - name: Checkout
         run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "Stake DAO Automation"
           git checkout -b bounties
           git merge origin/main
         shell: bash
@@ -32,8 +30,6 @@ jobs:
 
       - name: Commit and push changes to bribes repo
         run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "Stake DAO Automation"
           git merge origin/main
           git add .
           git commit -m "Update bounties"
