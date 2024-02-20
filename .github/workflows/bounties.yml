@@ -8,12 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 600
     steps:
-      - name: Checkout
-        run: |
-          git checkout -b bounties
-          git merge origin/main
-        shell: bash
-        if: always()
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: setup python
         uses: actions/setup-python@v4
@@ -30,12 +26,9 @@ jobs:
 
       - name: Commit and push changes to bribes repo
         run: |
-          git merge origin/main
+          git pull --rebase
           git add .
-          git commit -m "Update bounties"
-          git push
-          git checkout main
-          git merge origin/bounties
-          git push
+          git commit -m "Add bounties"
+          git push origin main
         shell: bash
         if: always()
