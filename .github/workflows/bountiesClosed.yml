@@ -23,9 +23,13 @@ jobs:
       - name: execute bountiesClosed.py # run bounties.py
         run: python bountiesClosed.py
 
-      # Commit all changed files back to the repository
-      - uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          # Optional. Options used by `git-push`.
-          # See https://git-scm.com/docs/git-push#_options
-          push_options: '--force'
+      - name: Commit and push changes to bribes repo
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Stake DAO Automation"
+          git add .
+          git commit -m "Bounties closed"
+          git pull --rebase
+          git push origin main
+        shell: bash
+        if: always()

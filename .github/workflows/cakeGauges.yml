@@ -29,5 +29,13 @@ jobs:
       - name: execute cakeTvls.py
         run: python cakeTvls.py
 
-      # Commit all changed files back to the repository
-      - uses: stefanzweifel/git-auto-commit-action@v4
+      - name: Commit and push changes to bribes repo
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Stake DAO Automation"
+          git add .
+          git commit -m "Cake gauges"
+          git pull --rebase
+          git push origin main
+        shell: bash
+        if: always()
