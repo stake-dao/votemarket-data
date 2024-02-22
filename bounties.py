@@ -285,7 +285,7 @@ def bounties(config):
         outfile.write(json_object)
             
 def main():
-    urlsResponse = requests.get("https://votemarket-git-feature-eng-421-vesdt-votemarket-stake-dao.vercel.app/platforms/index.json")
+    urlsResponse = requests.get("https://votemarket.stakedao.org/platforms/index.json")
     if urlsResponse.status_code != 200:
         return
 
