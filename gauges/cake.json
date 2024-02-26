@@ -1766,6 +1766,24 @@
             "weight": "3277715608995257674"
         },
         {
+            "gid": 104,
+            "address": "0xb1Da7D2C257c5700612BdE35C8d7187dc80d79f1",
+            "pairName": "lisUSD-USDT",
+            "chainId": 56,
+            "type": -1,
+            "tokenAddresses": [
+                "0x0782b6d8c4551B9760e74c0545a9bCD90bdc41E5",
+                "0x55d398326f99059fF775485246999027B3197955"
+            ],
+            "pid": 163,
+            "hash": "0xafc8d1db952e15ada77851c0b5f0f903bf5387cb4ccc16ecf20238379a67cc15",
+            "pairAddress": "0xb1Da7D2C257c5700612BdE35C8d7187dc80d79f1",
+            "masterChef": "0x735C0C6007307beFEC8Cb44112706d95759F6852",
+            "boostMultiplier": 100,
+            "maxVoteCap": 0,
+            "weight": "0"
+        },
+        {
             "gid": 105,
             "address": "0x1ac1A8FEaAEa1900C4166dEeed0C11cC10669D36",
             "pairName": "USDC-ETH",
@@ -1797,7 +1815,7 @@
             "masterChef": "0x735C0C6007307beFEC8Cb44112706d95759F6852",
             "boostMultiplier": 100,
             "maxVoteCap": 2500,
-            "weight": "1661147059004380974997495"
+            "weight": "1661597153626429533587077"
         },
         {
             "gid": 107,
@@ -3467,6 +3485,40 @@
             "weight": "0"
         },
         {
+            "gid": 206,
+            "pairName": "ordi-BNB",
+            "address": "0x442EFB99C2727c6000727C3cf672e3d77C9cDEaD",
+            "chainId": 56,
+            "type": 1,
+            "token0Address": "0xe2aE1a99bBd2eFab0a5C38f2146B7aCE61aBC5cE",
+            "token1Address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "feeTier": 10000,
+            "pid": 114,
+            "hash": "0xefec8b6064da77ec537b9ab3dd4fb21e925324053aa0bbfa84776066fb50433c",
+            "pairAddress": "0x442EFB99C2727c6000727C3cf672e3d77C9cDEaD",
+            "masterChef": "0x556B9306565093C855AEA9AE92A594704c2Cd59e",
+            "boostMultiplier": 100,
+            "maxVoteCap": 200,
+            "weight": "0"
+        },
+        {
+            "gid": 207,
+            "pairName": "MUBI-BNB",
+            "address": "0x961C19a53e5EA0e43B8F9020553F94623Ce475B6",
+            "chainId": 56,
+            "type": 1,
+            "token0Address": "0x38e382F74dfb84608F3C1F10187f6bEf5951DE93",
+            "token1Address": "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+            "feeTier": 10000,
+            "pid": 115,
+            "hash": "0x3efdb219faa5cee930f536f9855ddb46da33466208e80a3d0fd73038b3e65db6",
+            "pairAddress": "0x961C19a53e5EA0e43B8F9020553F94623Ce475B6",
+            "masterChef": "0x556B9306565093C855AEA9AE92A594704c2Cd59e",
+            "boostMultiplier": 100,
+            "maxVoteCap": 200,
+            "weight": "0"
+        },
+        {
             "gid": 208,
             "pairName": "NFP-USDT",
             "address": "0x4b36782B47a28Ee003013E7C56174CB5812F418B",
@@ -3584,7 +3636,7 @@
             "masterChef": "0x735C0C6007307beFEC8Cb44112706d95759F6852",
             "boostMultiplier": 100,
             "maxVoteCap": 2500,
-            "weight": "2525753803779251127804030"
+            "weight": "2525303711299500352871479"
         },
         {
             "gid": 215,
@@ -3739,6 +3791,23 @@
             "boostMultiplier": 100,
             "maxVoteCap": 100,
             "weight": "31061175565243294781"
+        },
+        {
+            "gid": 224,
+            "pairName": "wROSE-USDT",
+            "address": "0x5B56eea565dad4E72B8ea6a6567834E144fb7a93",
+            "chainId": 56,
+            "type": 1,
+            "token0Address": "0xF00600eBC7633462BC4F9C61eA2cE99F5AAEBd4a",
+            "token1Address": "0x55d398326f99059fF775485246999027B3197955",
+            "feeTier": 2500,
+            "pid": 123,
+            "hash": "0x131db4d4cd1748020f699a4c589ac2d031f87a2b89bfa8a2a8a23decbb11204e",
+            "pairAddress": "0x5B56eea565dad4E72B8ea6a6567834E144fb7a93",
+            "masterChef": "0x556B9306565093C855AEA9AE92A594704c2Cd59e",
+            "boostMultiplier": 100,
+            "maxVoteCap": 500,
+            "weight": "0"
         },
         {
             "gid": 225,
@@ -4763,5 +4832,5 @@
             "weight": "0"
         }
     ],
-    "lastUpdated": 1708936483428
+    "lastUpdated": 1708938445503
 }
