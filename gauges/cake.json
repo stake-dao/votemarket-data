@@ -5763,7 +5763,7 @@
         },
         {
             "gid": 340,
-            "pairName": "RNDT-USDC",
+            "pairName": "RDNT-USDC",
             "address": "0xD6d29209C256aD605cAB2a0aa3A7e68BA25bD9E6",
             "chainId": 42161,
             "type": 2,
@@ -5779,7 +5779,7 @@
         },
         {
             "gid": 341,
-            "pairName": "GMX-WETH",
+            "pairName": "WETH-GMX",
             "address": "0xee58dC42bC4E80331553CF6c4eb11efA54fFecDB",
             "chainId": 42161,
             "type": 2,
@@ -5795,7 +5795,7 @@
         },
         {
             "gid": 342,
-            "pairName": "LINK-WETH",
+            "pairName": "WETH-LINK",
             "address": "0x2167812429122441eaF7ADC50Ac96BCA1A39aA7D",
             "chainId": 42161,
             "type": 2,
@@ -5811,7 +5811,7 @@
         },
         {
             "gid": 343,
-            "pairName": "swETH-ETH",
+            "pairName": "WETH-swETH",
             "address": "0xD0dCEf57Dd0F196dD549a3C56332166C2f2ded4b",
             "chainId": 1,
             "type": 2,
@@ -5827,7 +5827,7 @@
         },
         {
             "gid": 344,
-            "pairName": "wstETH-ETHX",
+            "pairName": "wstETH-ETHx",
             "address": "0x97e4763B55D06230f7FAE335805edf53fC2E3275",
             "chainId": 1,
             "type": 2,
@@ -5843,7 +5843,7 @@
         },
         {
             "gid": 345,
-            "pairName": "USDC-ETHX",
+            "pairName": "USDC-ETHx",
             "address": "0x1b6cEecc5FC0B26E9b85695F649c3A45c18dd46c",
             "chainId": 1,
             "type": 2,
@@ -5910,6 +5910,22 @@
             "weight": "0"
         },
         {
+            "gid": 349,
+            "pairName": "USDC.E-GRAI",
+            "address": "0x5Eb74D624b60B3A9336a37509AF62f6906975264",
+            "chainId": 1101,
+            "type": 2,
+            "token0Address": "0x37eAA0eF3549a5Bb7D431be78a3D99BD360d19e5",
+            "token1Address": "0xCA68ad4EE5c96871EC6C6dac2F714a8437A3Fe66",
+            "pid": 0,
+            "hash": "0xb85516e946a13683c37e8f60700d51f603cc33b9a259e6989fc69b695e37c6de",
+            "pairAddress": "0x5Eb74D624b60B3A9336a37509AF62f6906975264",
+            "masterChef": "0x735C0C6007307beFEC8Cb44112706d95759F6852",
+            "boostMultiplier": 100,
+            "maxVoteCap": 50,
+            "weight": "0"
+        },
+        {
             "gid": 350,
             "pairName": "MATIC-GRAI",
             "address": "0x03B832F38878DC9478Ed8127Cb46C7c094a94941",
@@ -5927,7 +5943,7 @@
         },
         {
             "gid": 351,
-            "pairName": "BNB-ankrBNB",
+            "pairName": "rBNB-WBNB",
             "address": "0xB22e845415C0B28854DC59D8FF14d12Cb757108B",
             "chainId": 56,
             "type": 2,
@@ -5943,7 +5959,7 @@
         },
         {
             "gid": 352,
-            "pairName": "BNB-ankrBNB",
+            "pairName": "WBNB-rBNB",
             "address": "0xA9bC9d27B040944388F1D43D7Ed65584aa692b17",
             "chainId": 56,
             "type": 2,
@@ -5975,7 +5991,7 @@
         },
         {
             "gid": 354,
-            "pairName": "CAKE-USDT",
+            "pairName": "USDT-CAKE",
             "address": "0x0Def612e7a7b51ca7Ee38f7905dA809BD3491268",
             "chainId": 56,
             "type": 2,
@@ -6007,7 +6023,7 @@
         },
         {
             "gid": 356,
-            "pairName": "CAKE-WBNB",
+            "pairName": "WBNB-CAKE",
             "address": "0x8f22d7B80446F1dc4C5eb47F2038e17CA0306e0D",
             "chainId": 56,
             "type": 2,
@@ -6071,5 +6087,5 @@
             "weight": "0"
         }
     ],
-    "lastUpdated": 1712547104216
+    "lastUpdated": 1712548007083
 }
