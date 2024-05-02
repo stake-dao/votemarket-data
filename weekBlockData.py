@@ -12,7 +12,7 @@ def load_json(name):
 
 def main():
     w3 = Web3(Web3.HTTPProvider('https://eth.llamarpc.com'))
-    if w3.is_connected() == False:
+    if w3.isConnected() == False:
         logging.error("RPC down")
         return
 
@@ -20,7 +20,7 @@ def main():
     state_sender_abi = load_json("StateSender")
 
     # Block hash tooked from the contract, period logic already handled 
-    state_sender = w3.eth.contract(address=Web3.to_checksum_address("0xC19d317c84e43F93fFeBa146f4f116A6F2B04663"), abi=state_sender_abi)
+    state_sender = w3.eth.contract(address=Web3.toChecksumAddress("0xC19d317c84e43F93fFeBa146f4f116A6F2B04663"), abi=state_sender_abi)
 
     # Get current period
     current_period = state_sender.functions.getCurrentPeriod().call()
