@@ -5,6 +5,8 @@ from web3 import Web3
 Fetch block submited on Oracle for week and parse header and data as RLP
 '''
 
+logging.basicConfig(level=logging.INFO)
+
 def load_json(name):
     with open("abi/" + name + ".json", "r") as f:
         return json.load(f)
@@ -43,6 +45,10 @@ def main():
     camel_case_data = {to_camel_case(key): value for key, value in parsed_data.items()}
     # Convert the dictionary to JSON
     json_data = json.dumps(camel_case_data, indent=4)
+
+    logging.info(f"Block {block_number} data: {json_data}")
+
+
     # Write result to a JSON file
     with open("bounties/ethBlockData.json", "w") as file:
         file.write(json_data)
