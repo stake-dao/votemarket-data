@@ -1,9 +1,6 @@
 name: Votemarket_XChain - Setting JSON of Block Header + hash (retrieved from Eth State Sender on latest period)
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '59 23 * * 3' # At 23:59 on Wednesday
-    - cron: '0-5 0 * * 4' # Every minute from 00:00 to 00:05 on Thursday
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,7 +11,7 @@ jobs:
       - name: setup python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10' # install the python version needed
+          python-version: "3.10" # install the python version needed
 
       - name: install python packages
         run: |
@@ -25,12 +22,12 @@ jobs:
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
-          
+
       - name: install toji
         run: cargo install --git https://github.com/rkdud007/toji --locked --force
-        
-      - name: execute weekBlockData.py 
-        run: python weekBlockData.py 
+
+      - name: execute weekBlockData.py
+        run: python weekBlockData.py
 
       - name: Commit and push changes to bribes repo
         run: |
