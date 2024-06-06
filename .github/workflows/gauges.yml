@@ -20,8 +20,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: execute cakeGauges.py
-        run: python cakeGauges.py
+      - name: execute gauges.py
+        run: python gauges.py
 
       - name: execute sushiTokens.py
         run: python sushiTokens.py
@@ -34,7 +34,7 @@ jobs:
           git config --local user.email "actions@github.com"
           git config --local user.name "Stake DAO Automation"
           git add .
-          git commit -m "Cake gauges"
+          git commit -m "Gauges"
           git pull --rebase
           git push origin main
         shell: bash
