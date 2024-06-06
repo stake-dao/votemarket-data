@@ -23,7 +23,7 @@ def frax():
     fetch("https://api.frax.finance/v1/gauge/voter-info/0x0000000000000000000000000000000000000000", "frax.json")
 
 def fxn():
-    fetch("https://api.aladdin.club/api1/get_fx_gauge_list", "fxs.json")
+    fetch("https://api.aladdin.club/api1/get_fx_gauge_list", "fxn.json")
 
 def balancer():
     try:
@@ -35,6 +35,7 @@ def balancer():
               veBalGetVotingList {
                 gauge {
                     address
+                    isKilled
                 }
                 symbol
                 chain
@@ -47,11 +48,7 @@ def balancer():
         if response.status_code == 200:
             data = response.json()
             if data and "data" in data and "veBalGetVotingList" in data["data"]:
-                pools = [
-                    {"name": pool["symbol"], "address": pool["gauge"]["address"], "chain": pool["chain"]}
-                    for pool in data["data"]["veBalGetVotingList"]
-                ]
-                writeGauges(pools, "balancer.json")
+                writeGauges(data["data"]["veBalGetVotingList"], "balancer.json")
             else:
                 print(
                     "Failed to fetch Balancer pools: API responded with success: false"
@@ -85,7 +82,6 @@ def lit():
 
         if response.status_code == 200:
             data = response.json()
-            print(data)
             if data and "data" in data and "pools" in data["data"] :
                 writeGauges(data["data"]["pools"], "lit.json")
             else:
@@ -106,6 +102,7 @@ def main():
     frax()
     fxn()
     lit()
+    fxn()
 
 
 __name__ == "__main__" and main()
