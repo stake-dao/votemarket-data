@@ -1,4 +1,4 @@
-import subprocess, json, logging
+import subprocess, json, logging, os
 from web3 import Web3
 
 """
@@ -52,9 +52,11 @@ def main():
     logging.info(f"Block {block_number} data: {json_data}")
 
     # Write result to a JSON file
-    with open("bounties/ethBlockData.json", "w") as file:
+    directory = f"bounties/x-chain/{current_period}"
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    with open(f"{directory}/block_header.json", "w") as file:
         file.write(json_data)
-
 
 def parse_toji_output(data):
     # Initialize an empty dictionary to hold the parsed data
