@@ -29,6 +29,9 @@ jobs:
       - name: execute weekBlockData.py
         run: python weekBlockData.py
 
+      - name: execute proofs.py
+        run: python x-chain/proofs.py
+
       - name: Commit and push changes to bribes repo
         run: |
           git config --local user.email "actions@github.com"
