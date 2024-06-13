@@ -1,6 +1,10 @@
 name: Votemarket_XChain - Setting JSON of Block Header + hash (retrieved from Eth State Sender on latest period)
 on:
   workflow_dispatch:
+
+env:
+  ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,8 +30,11 @@ jobs:
       - name: install toji
         run: cargo install --git https://github.com/rkdud007/toji --locked --force
 
-      - name: execute weekBlockData.py
-        run: python weekBlockData.py
+      - name: execute header-data.py
+        run: python x-chain/header-data.py
+
+      - name: execute proofs.py
+        run: python x-chain/proofs.py
 
       - name: Commit and push changes to bribes repo
         run: |
