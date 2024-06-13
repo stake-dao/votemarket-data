@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-MAINNET_URL = "https://eth.llamarpc.com"
+MAINNET_URL = "https://eth-mainnet.g.alchemy.com/v2/" + os.getenv("ALCHEMY_API_KEY")
 ARBITRUM_URL = "https://arb1.arbitrum.io/rpc"
 OPTIMISM_URL = "https://optimism.llamarpc.com"
 BASE_URL = "https://base.llamarpc.com"
@@ -229,7 +229,6 @@ def main():
         if len(all_gauges) == 0:
             continue
 
-
         all_voters = query_all_voters_gauges(gauge_controller, all_gauges)
 
         all_users = {}
@@ -278,13 +277,15 @@ def main():
                     rlp_proof = encode_rlp_proofs(raw_proof_data)
                     user_proofs_rlp[gauge_address][user] = rlp_proof.hex()
 
-        # Add blacklisted addresses to the proofs 
+        # Add blacklisted addresses to the proofs
         for bounty in active_bounties:
             gauge_address = w3_eth.toChecksumAddress(bounty["gaugeAddress"].lower())
             if len(bounty["blacklist"]) == 0:
                 continue
             for user in bounty["blacklist"]:
-                if w3_eth.toChecksumAddress(user.lower()) not in user_proofs_rlp.get(gauge_address, {}):
+                if w3_eth.toChecksumAddress(user.lower()) not in user_proofs_rlp.get(
+                    gauge_address, {}
+                ):
                     # Encode rlp
                     main_proof_params = state_sender.functions.generateEthProofParams(
                         w3_eth.toChecksumAddress(user.lower()),
@@ -317,9 +318,6 @@ def main():
         if len(proofs) > 0:
             with open(f"{directory}/{protocol}_proofs.json", "w") as f:
                 json.dump(proofs, f)
-
-
-
 
 
 if __name__ == "__main__":
