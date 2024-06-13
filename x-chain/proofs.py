@@ -6,8 +6,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# MAINNET_URL = "https://eth.llamarpc.com"
-MAINNET_URL = "https://eth-mainnet.g.alchemy.com/v2/WEWx5iCzcyQfPmuSnEiEWbRaO6H2ViGw"
+MAINNET_URL = "https://eth.llamarpc.com"
 ARBITRUM_URL = "https://arb1.arbitrum.io/rpc"
 OPTIMISM_URL = "https://optimism.llamarpc.com"
 BASE_URL = "https://base.llamarpc.com"
