@@ -1,6 +1,10 @@
 name: Votemarket_XChain - Setting JSON of Block Header + hash (retrieved from Eth State Sender on latest period)
 on:
   workflow_dispatch:
+
+env:
+  ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
