@@ -26,8 +26,8 @@ jobs:
       - name: install toji
         run: cargo install --git https://github.com/rkdud007/toji --locked --force
 
-      - name: execute weekBlockData.py
-        run: python weekBlockData.py
+      - name: execute header-data.py
+        run: python x-chain/header-data.py
 
       - name: execute proofs.py
         run: python x-chain/proofs.py
