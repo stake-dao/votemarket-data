@@ -250,8 +250,8 @@ def main():
 
         # Generate proofs for all users eligible for claims (to be used on claims) -> Stored as gauge -> user -> proofs
         latest_header_proof = load_json(
-            "bounties/x-chain/1717632000/block_header"
-        )  # TODO : Use period
+            f"bounties/x-chain/{current_period}/block_header"
+        )
 
         user_proofs_rlp = {}  # gauge -> user -> proofs[]
 
