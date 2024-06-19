@@ -13,7 +13,7 @@ BASE_URL = "https://base.llamarpc.com"
 POLYGON_URL = "https://polygon.llamarpc.com"
 
 
-ETHEREUM_STATE_SENDER = "0xe742141075767106fed9f6ffa99f07f33bd66312"
+ETHEREUM_STATE_SENDER = "0x7718602Fb061Fc2E0a20fc76261CA02D2f03e65d"
 AGNOSTIC_ENDPOINT = os.getenv("AGNOSTIC_ENDPOINT")
 AGNOSTIC_HEADERS = {
     "Authorization": os.getenv("AGNOSTIC_API_KEY"),
@@ -160,15 +160,6 @@ def query_all_voters_gauges(gauge_controller, gauge_addresses):
 def check_eligibility(w3, gauge_controller, user, gauge_address, current_period):
     # Check if user is eligible for the bounty
     is_eligible = False
-
-    """
-    # Check if user is blacklisted on all bounties with that gauge, if not , process
-    for bounty in active_bounties:
-        if bounty.get("gaugeAddress") == gauge:
-            if user not in bounty.get("blacklist"):
-                is_eligible = True
-                break
-    """
 
     # Check the slope of that user for the gauge
     last_vote = gauge_controller.functions.last_user_vote(
