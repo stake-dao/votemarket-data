@@ -3,34 +3,60 @@
         "inputs": [
             {
                 "internalType": "address",
-                "name": "_admin",
+                "name": "_governance",
                 "type": "address"
             }
         ],
-        "stateMutability": "nonpayable",
+        "stateMutability": "payable",
         "type": "constructor"
     },
     {
         "inputs": [],
-        "name": "ONLY_ADMIN",
+        "name": "AlreadySent",
         "type": "error"
     },
     {
         "inputs": [],
-        "name": "VALUE_TOO_LOW",
+        "name": "ChainAlreadyExists",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "ChainNotFound",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "GovernanceOnly",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "InsufficientValue",
+        "type": "error"
+    },
+    {
+        "inputs": [],
+        "name": "TooCloseToCurrentPeriod",
         "type": "error"
     },
     {
         "anonymous": false,
         "inputs": [
             {
-                "indexed": false,
-                "internalType": "address",
-                "name": "_admin",
-                "type": "address"
+                "indexed": true,
+                "internalType": "string",
+                "name": "chain",
+                "type": "string"
+            },
+            {
+                "indexed": true,
+                "internalType": "address[]",
+                "name": "contracts",
+                "type": "address[]"
             }
         ],
-        "name": "AdminSet",
+        "name": "ChainAdded",
         "type": "event"
     },
     {
@@ -38,24 +64,12 @@
         "inputs": [
             {
                 "indexed": true,
-                "internalType": "uint256",
-                "name": "_blockNumber",
-                "type": "uint256"
-            },
-            {
-                "indexed": false,
-                "internalType": "bytes32",
-                "name": "_blockHash",
-                "type": "bytes32"
-            },
-            {
-                "indexed": false,
                 "internalType": "string",
-                "name": "_destinationChain",
+                "name": "chain",
                 "type": "string"
             }
         ],
-        "name": "BlockhashSent",
+        "name": "ChainRemoved",
         "type": "event"
     },
     {
@@ -64,19 +78,45 @@
             {
                 "indexed": true,
                 "internalType": "address",
-                "name": "_sender",
+                "name": "newGovernance",
+                "type": "address"
+            }
+        ],
+        "name": "GovernanceChanged",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "uint256",
+                "name": "newValue",
+                "type": "uint256"
+            }
+        ],
+        "name": "RecipientMinValueSet",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": true,
+                "internalType": "address",
+                "name": "sender",
                 "type": "address"
             },
             {
                 "indexed": true,
                 "internalType": "address",
-                "name": "_recipient",
+                "name": "recipient",
                 "type": "address"
             },
             {
-                "indexed": false,
+                "indexed": true,
                 "internalType": "string",
-                "name": "_destinationChain",
+                "name": "chain",
                 "type": "string"
             }
         ],
@@ -89,24 +129,11 @@
             {
                 "indexed": false,
                 "internalType": "uint256",
-                "name": "_minValue",
+                "name": "newValue",
                 "type": "uint256"
             }
         ],
-        "name": "SendBlockhashMinValueSet",
-        "type": "event"
-    },
-    {
-        "anonymous": false,
-        "inputs": [
-            {
-                "indexed": false,
-                "internalType": "uint256",
-                "name": "_minValue",
-                "type": "uint256"
-            }
-        ],
-        "name": "SetRecipientMinValueSet",
+        "name": "SendBlockHashMinValueSet",
         "type": "event"
     },
     {
@@ -137,15 +164,27 @@
     },
     {
         "inputs": [],
-        "name": "admin",
-        "outputs": [
+        "name": "acceptGovernance",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
             {
-                "internalType": "address",
-                "name": "",
-                "type": "address"
+                "internalType": "string",
+                "name": "chain",
+                "type": "string"
+            },
+            {
+                "internalType": "address[]",
+                "name": "contracts",
+                "type": "address[]"
             }
         ],
-        "stateMutability": "view",
+        "name": "addChain",
+        "outputs": [],
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -192,19 +231,27 @@
                 "internalType": "uint256",
                 "name": "",
                 "type": "uint256"
-            },
+            }
+        ],
+        "name": "chains",
+        "outputs": [
             {
                 "internalType": "string",
-                "name": "",
+                "name": "chain",
                 "type": "string"
             }
         ],
-        "name": "destinationChains",
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "futureGovernance",
         "outputs": [
             {
-                "internalType": "uint256",
+                "internalType": "address",
                 "name": "",
-                "type": "uint256"
+                "type": "address"
             }
         ],
         "stateMutability": "view",
@@ -260,6 +307,37 @@
         "type": "function"
     },
     {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "getChain",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "string",
+                        "name": "chain",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "address[]",
+                        "name": "contracts",
+                        "type": "address[]"
+                    }
+                ],
+                "internalType": "struct EthereumStateSender.ChainContract",
+                "name": "",
+                "type": "tuple"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "inputs": [],
         "name": "getCurrentPeriod",
         "outputs": [
@@ -270,6 +348,80 @@
             }
         ],
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "getEnabledContracts",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "count",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "governance",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "chain",
+                "type": "string"
+            }
+        ],
+        "name": "removeChain",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [],
+        "name": "sendBlockHash",
+        "outputs": [],
+        "stateMutability": "payable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "chain",
+                "type": "string"
+            },
+            {
+                "internalType": "address[]",
+                "name": "contracts",
+                "type": "address[]"
+            },
+            {
+                "internalType": "uint256",
+                "name": "blockNumber",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bytes32",
+                "name": "blockHash",
+                "type": "bytes32"
+            }
+        ],
+        "name": "sendBlockHashEmergency",
+        "outputs": [],
+        "stateMutability": "payable",
         "type": "function"
     },
     {
@@ -288,48 +440,12 @@
     {
         "inputs": [
             {
-                "internalType": "string[]",
-                "name": "_destinationChains",
-                "type": "string[]"
-            },
-            {
-                "internalType": "address[]",
-                "name": "_destinationContracts",
-                "type": "address[]"
+                "internalType": "uint256",
+                "name": "newValue",
+                "type": "uint256"
             }
         ],
-        "name": "sendBlockhash",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "string",
-                "name": "_destinationChain",
-                "type": "string"
-            },
-            {
-                "internalType": "address",
-                "name": "_destinationContract",
-                "type": "address"
-            }
-        ],
-        "name": "sendBlockhashEmergency",
-        "outputs": [],
-        "stateMutability": "payable",
-        "type": "function"
-    },
-    {
-        "inputs": [
-            {
-                "internalType": "address",
-                "name": "_admin",
-                "type": "address"
-            }
-        ],
-        "name": "setAdmin",
+        "name": "setMinValueForSetRecipient",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
@@ -338,13 +454,13 @@
         "inputs": [
             {
                 "internalType": "string",
-                "name": "destinationChain",
+                "name": "chain",
                 "type": "string"
             },
             {
-                "internalType": "address",
-                "name": "destinationContract",
-                "type": "address"
+                "internalType": "address[]",
+                "name": "contracts",
+                "type": "address[]"
             },
             {
                 "internalType": "address",
@@ -374,7 +490,7 @@
         "inputs": [
             {
                 "internalType": "uint256",
-                "name": "minValue",
+                "name": "newValue",
                 "type": "uint256"
             }
         ],
@@ -386,18 +502,14 @@
     {
         "inputs": [
             {
-                "internalType": "uint256",
-                "name": "minValue",
-                "type": "uint256"
+                "internalType": "address",
+                "name": "_governance",
+                "type": "address"
             }
         ],
-        "name": "setSetRecipientMinValue",
+        "name": "transferGovernance",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
-    },
-    {
-        "stateMutability": "payable",
-        "type": "receive"
     }
 ]

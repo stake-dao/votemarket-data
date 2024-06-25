@@ -23,7 +23,7 @@ def main():
 
     # Block hash tooked from the contract, period logic already handled
     state_sender = w3.eth.contract(
-        address=Web3.toChecksumAddress("0xe742141075767106fed9f6ffa99f07f33bd66312"),
+        address=Web3.toChecksumAddress("0x189B2c0e4e8e221173f266f311C949498A4859D1"),
         abi=state_sender_abi,
     )
 

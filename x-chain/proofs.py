@@ -13,7 +13,7 @@ BASE_URL = "https://base.llamarpc.com"
 POLYGON_URL = "https://polygon.llamarpc.com"
 
 
-ETHEREUM_STATE_SENDER = "0xe742141075767106fed9f6ffa99f07f33bd66312"
+ETHEREUM_STATE_SENDER = "0x189B2c0e4e8e221173f266f311C949498A4859D1"
 AGNOSTIC_ENDPOINT = os.getenv("AGNOSTIC_ENDPOINT")
 AGNOSTIC_HEADERS = {
     "Authorization": os.getenv("AGNOSTIC_API_KEY"),
