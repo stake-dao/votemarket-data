@@ -3,6 +3,8 @@ from w3multicall.multicall import W3Multicall
 import json, os, requests, rlp
 from hexbytes import HexBytes
 from dotenv import load_dotenv
+from eth_abi import encode
+from eth_utils import keccak
 
 load_dotenv()
 
@@ -18,6 +20,25 @@ AGNOSTIC_ENDPOINT = os.getenv("AGNOSTIC_ENDPOINT")
 AGNOSTIC_HEADERS = {
     "Authorization": os.getenv("AGNOSTIC_API_KEY"),
     "Cache-Control": "max-age=300",
+}
+
+# To get positions
+GAUGES_SLOTS = {
+    "0xC128468b7Ce63eA702C1f104D55A2566b13D3ABD": {
+        "last_user_vote": 1000000007,
+        "point_weights": 1000000008,
+        "vote_user_slope": 1000000005,
+    },
+    "0x3669C421b77340B2979d1A00a792CC2ee0FcE737": {
+        "last_user_vote": 1000000010,
+        "point_weights": 10000000011,
+        "vote_user_slope": 1000000008,
+    },
+    "0xe60eB8098B34eD775ac44B1ddE864e098C6d7f37": {
+        "last_user_vote": 1000000010,
+        "point_weights": 10000000011,
+        "vote_user_slope": 1000000008,
+    },
 }
 
 
@@ -184,6 +205,30 @@ def check_eligibility(w3, gauge_controller, user, gauge_address, current_period)
     return is_eligible
 
 
+
+def get_position_from_user_gauge(user, gauge, base_slot):
+    # Encode the user address with the base slot and hash
+    user_encoded = keccak(encode(["uint256", "address"], [base_slot, user]))
+
+    # Encode the result with the gauge address and hash
+    final_slot = keccak(encode(["bytes32", "address"], [user_encoded, gauge]))
+
+    # Convert the final hash to an integer slot number
+    return int.from_bytes(final_slot, byteorder="big")
+
+
+def get_position_from_gauge_time(gauge, time, base_slot):
+    # Encode the user address with the base slot and hash
+    gauge_encoded = keccak(encode(["uint256", "address"], [base_slot, gauge]))
+
+    # Encode the result with the user address and time
+    final_slot = keccak(encode(["bytes32", "uint256"], [gauge_encoded, time]))
+
+    # Convert the final hash to an integer slot number
+    return int.from_bytes(final_slot, byteorder="big")
+
+
+
 def main():
     # Get input data
     input_data = load_json("x-chain/inputs")
@@ -206,6 +251,7 @@ def main():
         gauge_controller = line["gauge_controller"]
         start_block = line["start_block"]
         platforms = line["platforms"]
+        use_state_sender = line["use_state_sender"]
 
         protocol_data[protocol] = {}
 
@@ -257,16 +303,54 @@ def main():
         for gauge_address, users in all_users.items():
             user_proofs_rlp[gauge_address] = user_proofs_rlp.get(gauge_address, {})
             for user in users:
+                positions = []
                 if user not in user_proofs_rlp[gauge_address]:
                     # Generate main proof (for user)
-                    main_proof_params = state_sender.functions.generateEthProofParams(
-                        w3_eth.toChecksumAddress(user.lower()),
-                        w3_eth.toChecksumAddress(gauge_address.lower()),
-                        current_period,
-                    ).call()
-                    positions = []
-                    for position in main_proof_params[3]:
-                        positions.append(w3_eth.toHex(position))
+                    if use_state_sender:
+                        main_proof_params = (
+                            state_sender.functions.generateEthProofParams(
+                                w3_eth.toChecksumAddress(user.lower()),
+                                w3_eth.toChecksumAddress(gauge_address.lower()),
+                                current_period,
+                            ).call()
+                        )
+                        for position in main_proof_params[3]:
+                            positions.append(w3_eth.toHex(position))
+                    else:
+                        # Positions array : [lastUserVotes; pointWeights.bias; pointsWeigths.slope; voteUserSlope.slope; voteUserSlope.power; voteUserSlope.end]
+                        last_user_vote_base_slot = GAUGES_SLOTS[gauge_controller][
+                            "last_user_vote"
+                        ]
+                        point_weights_base_slot = GAUGES_SLOTS[gauge_controller][
+                            "point_weights"
+                        ]
+                        vote_user_slope_base_slot = GAUGES_SLOTS[gauge_controller][
+                            "vote_user_slope"
+                        ]
+
+                        last_user_vote_position = get_position_from_user_gauge(
+                            w3_eth.toChecksumAddress(user.lower()), w3_eth.toChecksumAddress(gauge_address.lower()), last_user_vote_base_slot
+                        )
+                        point_weights_position = get_position_from_gauge_time(
+                            w3_eth.toChecksumAddress(gauge_address.lower()), current_period, point_weights_base_slot
+                        )
+                        vote_user_slope_position = get_position_from_user_gauge(
+                            w3_eth.toChecksumAddress(user.lower()), w3_eth.toChecksumAddress(gauge_address.lower()), vote_user_slope_base_slot
+                        )
+
+                        vote_user_slope_slope = vote_user_slope_position
+                        vote_user_slope_power = vote_user_slope_position + 1
+                        vote_user_slope_end = vote_user_slope_position + 2
+
+                        points_weights_bias = point_weights_position
+                        points_weights_slope = point_weights_position + 1
+
+                        positions.append(w3_eth.toHex(last_user_vote_position))
+                        positions.append(w3_eth.toHex(points_weights_bias))
+                        positions.append(w3_eth.toHex(points_weights_slope))
+                        positions.append(w3_eth.toHex(vote_user_slope_slope))
+                        positions.append(w3_eth.toHex(vote_user_slope_power))
+                        positions.append(w3_eth.toHex(vote_user_slope_end))
 
                     # Proof rlp
                     raw_proof_data = w3_eth.eth.get_proof(
@@ -280,21 +364,57 @@ def main():
         # Add blacklisted addresses to the proofs
         for bounty in active_bounties:
             gauge_address = w3_eth.toChecksumAddress(bounty["gaugeAddress"].lower())
+
             if len(bounty["blacklist"]) == 0:
                 continue
             for user in bounty["blacklist"]:
                 if w3_eth.toChecksumAddress(user.lower()) not in user_proofs_rlp.get(
                     gauge_address, {}
                 ):
-                    # Encode rlp
-                    main_proof_params = state_sender.functions.generateEthProofParams(
+                    positions = []
+                    if use_state_sender:
+                        main_proof_params = state_sender.functions.generateEthProofParams(
                         w3_eth.toChecksumAddress(user.lower()),
                         gauge_address,
                         current_period,
-                    ).call()
-                    positions = []
-                    for position in main_proof_params[3]:
-                        positions.append(w3_eth.toHex(position))
+                        ).call()
+                        for position in main_proof_params[3]:
+                            positions.append(w3_eth.toHex(position))
+                    else:
+                        # Positions array : [lastUserVotes; pointWeights.bias; pointsWeigths.slope; voteUserSlope.slope; voteUserSlope.power; voteUserSlope.end]
+                        last_user_vote_base_slot = GAUGES_SLOTS[w3_eth.toChecksumAddress(gauge_controller.lower())][
+                            "last_user_vote"
+                        ]
+                        point_weights_base_slot = GAUGES_SLOTS[w3_eth.toChecksumAddress(gauge_controller.lower())][
+                            "point_weights"
+                        ]
+                        vote_user_slope_base_slot = GAUGES_SLOTS[w3_eth.toChecksumAddress(gauge_controller.lower())][
+                            "vote_user_slope"
+                        ]
+
+                        last_user_vote_position = get_position_from_user_gauge(
+                            w3_eth.toChecksumAddress(user.lower()), w3_eth.toChecksumAddress(gauge_address.lower()), last_user_vote_base_slot
+                        )
+                        point_weights_position = get_position_from_gauge_time(
+                            w3_eth.toChecksumAddress(gauge_address.lower()), current_period, point_weights_base_slot
+                        )
+                        vote_user_slope_position = get_position_from_user_gauge(
+                            w3_eth.toChecksumAddress(user.lower()), w3_eth.toChecksumAddress(gauge_address.lower()), vote_user_slope_base_slot
+                        )
+
+                        vote_user_slope_slope = vote_user_slope_position
+                        vote_user_slope_power = vote_user_slope_position + 1
+                        vote_user_slope_end = vote_user_slope_position + 2
+
+                        points_weights_bias = point_weights_position
+                        points_weights_slope = point_weights_position + 1
+
+                        positions.append(w3_eth.toHex(last_user_vote_position))
+                        positions.append(w3_eth.toHex(points_weights_bias))
+                        positions.append(w3_eth.toHex(points_weights_slope))
+                        positions.append(w3_eth.toHex(vote_user_slope_slope))
+                        positions.append(w3_eth.toHex(vote_user_slope_power))
+                        positions.append(w3_eth.toHex(vote_user_slope_end))
 
                     # Proof rlp
                     raw_proof_data = w3_eth.eth.get_proof(
@@ -307,7 +427,6 @@ def main():
 
         protocol_data[protocol] = user_proofs_rlp
 
-    print(protocol_data)
 
     # Write result to a JSON file
     directory = f"bounties/x-chain/{current_period}"
