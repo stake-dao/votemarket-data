@@ -9,7 +9,7 @@ def isNullAddress(addr):
     return addr == "0x0000000000000000000000000000000000000000"
     
 def bounties(config): 
-    w3 = Web3(Web3.HTTPProvider('https://eth.public-rpc.com'))
+    w3 = Web3(Web3.HTTPProvider('https://eth.drpc.org'))
     if w3.isConnected() == False:
         logging.error("RPC down")
         return

@@ -1,7 +1,7 @@
 import requests, logging, os, time, json
 from web3 import Web3
 
-MAINNET_URL = 'https://eth.public-rpc.com'
+MAINNET_URL = 'https://eth.drpc.org'
 BSC_URL = 'https://rpc.ankr.com/bsc'
 FXS_GAUGE_CONTROLLER = "0x3669C421b77340B2979d1A00a792CC2ee0FcE737"
 WEEK = 604800
