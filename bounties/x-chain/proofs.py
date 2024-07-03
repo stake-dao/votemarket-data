@@ -14,7 +14,6 @@ def generate_proof(
 
     # Positions array : [lastUserVotes; pointWeights.bias; pointsWeigths.slope; voteUserSlope.slope; voteUserSlope.power; voteUserSlope.end]
     positions = []
-    # Positions array : [lastUserVotes; pointWeights.bias; pointsWeigths.slope; voteUserSlope.slope; voteUserSlope.power; voteUserSlope.end]
     last_user_vote_base_slot = Constants.GAUGES_SLOTS[protocol]["last_user_vote"]
     point_weights_base_slot = Constants.GAUGES_SLOTS[protocol]["point_weights"]
     vote_user_slope_base_slot = Constants.GAUGES_SLOTS[protocol]["vote_user_slope"]
@@ -24,16 +23,30 @@ def generate_proof(
         w3_eth.toChecksumAddress(gauge_address.lower()),
         last_user_vote_base_slot,
     )
-    point_weights_position = get_position_from_gauge_time(
-        w3_eth.toChecksumAddress(gauge_address.lower()),
-        current_period,
-        point_weights_base_slot,
-    )
-    vote_user_slope_position = get_position_from_user_gauge(
-        w3_eth.toChecksumAddress(user.lower()),
-        w3_eth.toChecksumAddress(gauge_address.lower()),
-        vote_user_slope_base_slot,
-    )
+
+    if protocol == "curve":
+        point_weights_position = get_position_from_gauge_time_old(
+            w3_eth.toChecksumAddress(gauge_address.lower()),
+            current_period,
+            point_weights_base_slot,
+        )
+        vote_user_slope_position = get_position_from_user_gauge_old(
+            w3_eth.toChecksumAddress(user.lower()),
+            w3_eth.toChecksumAddress(gauge_address.lower()),
+            vote_user_slope_base_slot,
+        )
+
+    else:
+        point_weights_position = get_position_from_gauge_time(
+            w3_eth.toChecksumAddress(gauge_address.lower()),
+            current_period,
+            point_weights_base_slot,
+        )
+        vote_user_slope_position = get_position_from_user_gauge(
+            w3_eth.toChecksumAddress(user.lower()),
+            w3_eth.toChecksumAddress(gauge_address.lower()),
+            vote_user_slope_base_slot,
+        )
 
     vote_user_slope_slope = vote_user_slope_position
     vote_user_slope_power = vote_user_slope_position + 1
@@ -83,18 +96,33 @@ def get_position_from_gauge_time(gauge, time, base_slot):
 
 
 """ Curve case (old vyper) """
+
+
 def get_position_from_user_gauge_old(user, gauge, base_slot):
+    # Encode the base slot and user address, then hash
     user_encoded = keccak(encode(["uint256", "address"], [base_slot, user]))
-    user_encoded_hashed = keccak(user_encoded)
-    final_slot = keccak(encode(["bytes32", "address"], [user_encoded_hashed, gauge]))
+
+    # Encode the result with the gauge address, then hash
+    intermediate_hash = keccak(encode(["bytes32", "address"], [user_encoded, gauge]))
+
+    # Final hash
+    final_slot = keccak(encode(["bytes32"], [intermediate_hash]))
+
+    # Convert the final hash to an integer slot number
     return int.from_bytes(final_slot, byteorder="big")
 
 
 def get_position_from_gauge_time_old(gauge, time, base_slot):
+    # Encode the base slot and gauge address, then hash
     gauge_encoded = keccak(encode(["uint256", "address"], [base_slot, gauge]))
-    gauge_encoded_hashed = keccak(gauge_encoded)
-    time_encoded = keccak(encode(["bytes32", "uint256"], [gauge_encoded_hashed, time]))
-    final_slot = keccak(time_encoded)
+
+    # Encode the result with the time, then hash
+    intermediate_hash = keccak(encode(["bytes32", "uint256"], [gauge_encoded, time]))
+
+    # Final hash
+    final_slot = keccak(encode(["bytes32"], [intermediate_hash]))
+
+    # Convert the final hash to an integer slot number
     return int.from_bytes(final_slot, byteorder="big")
 
 
@@ -136,9 +164,9 @@ def main():
             w3 = Utils.get_web3(platform_data["chainId"])
             vm = Utils.load_contract(w3, platform_data["address"], platform_l2_abi)
             bounties = Utils.get_active_bounties(vm, current_period, w3)
-            # Filter out empty bounties
+            # Filter out empty bounties and add chainId as a key
             active_bounties += [
-                bounty
+                {**bounty, "chainId": platform_data["chainId"]}
                 for bounty in bounties
                 if bounty["bounty_id"]
                 and bounty["reward_token"]
@@ -209,6 +237,9 @@ def main():
                 continue
 
             proof = ""
+
+            blacklist_proofs = {}
+
             for user in bounty["blacklist"]:
                 # If user / gauge is already present in active_users_for_gauges; take it
                 if user in active_users_for_gauges[bounty["gauge_address"]]:
@@ -225,18 +256,18 @@ def main():
                         latest_header_proof,
                     )
                 # Transform blacklist [] into {user: proof}
-                if not bounty["blacklist_proof"]:
-                    bounty["blacklist_proof"] = {}
-                bounty["blacklist_proof"][user] = proof.hex()
+                blacklist_proofs[user] = proof.hex()
 
-        protocol_data[protocol]["active_bounties"] = active_bounties
+            # Replace "blacklist" by blacklist_proof
+            bounty["blacklist"] = blacklist_proofs
 
-    '''
+        protocol_data[protocol] = active_bounties
+
     # Write Json files (even empty ones)
     for protocol in Constants.PROTOCOLS:
         with open(f"bounties/x-chain/{current_period}/{protocol}.json", "w") as f:
             json.dump(protocol_data[protocol], f, indent=4)
-    '''
+
 
 if __name__ == "__main__":
     main()

@@ -33,10 +33,10 @@ jobs:
         run: cargo install --git https://github.com/rkdud007/toji --locked --force
 
       - name: execute header-data.py
-        run: python x-chain/header-data.py
+        run: python bounties/x-chain/header-data.py
 
       - name: execute proofs.py
-        run: python x-chain/proofs.py
+        run: python bounties/x-chain/proofs.py
 
       - name: Commit and push changes to bribes repo
         run: |
