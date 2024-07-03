@@ -188,6 +188,7 @@ class Utils:
             ):
                 active_bounties.append(
                     {
+                        "platform": vm.address,
                         "bounty_id": i,
                         "reward_token": bounty_details[2],
                         "gauge_address": bounty_details[0],
