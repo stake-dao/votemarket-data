@@ -168,7 +168,7 @@ def main():
             active_bounties += [
                 {**bounty, "chainId": platform_data["chainId"]}
                 for bounty in bounties
-                if bounty["bounty_id"]
+                if bounty["bounty_id"] >= 0
                 and bounty["reward_token"]
                 and bounty["gauge_address"]
             ]
