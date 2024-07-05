@@ -52,25 +52,73 @@ class Constants:
             {
                 "chainId": 42161,
                 "address": "0xB854cF650F5492d23e52cb2A7a58B787fC25B0Bb",
-            }
+            },
+            {
+                "chainId": 10,
+                "address": "0x786e2D03B32BFc42D60C366F07aBe9B218B7A4eE",
+            },
+            {
+                "chainId": 137,
+                "address": "0x6Bd5A9D7f683Db92F45fEd77b2291139E854bf20",
+            },
+            {
+                "chainId": 8453,
+                "address": "0x786e2D03B32BFc42D60C366F07aBe9B218B7A4eE",
+            },
         ],
         "balancer": [
             {
                 "chainId": 42161,
                 "address": "0xFf276AB161f48f6DBa99dE4601f9a518D1d903f9",
-            }
+            },
+            {
+                "chainId": 10,
+                "address": "0x21e6ABAf84f6087915ffFE6275f9cBeCDeeEC837",
+            },
+            {
+                "chainId": 137,
+                "address": "0x6d875483F57E2b85378C74377542eA242Ed46Dbe",
+            },
+            {
+                "chainId": 8453,
+                "address": "0x21e6ABAf84f6087915ffFE6275f9cBeCDeeEC837",
+            },
         ],
         "frax": [
             {
                 "chainId": 42161,
                 "address": "0x4941c004dC4Ae7bcb74B404fbd4ff07Dc32e3ecc",
-            }
+            },
+            {
+                "chainId": 10,
+                "address": "0xa8377e03617de8DA2C18621BE83bcBd5a34Ca1C9",
+            },
+            {
+                "chainId": 137,
+                "address": "0x189B2c0e4e8e221173f266f311C949498A4859D1",
+            },
+            {
+                "chainId": 8453,
+                "address": "0xa8377e03617de8DA2C18621BE83bcBd5a34Ca1C9",
+            },
         ],
         "fxn": [
             {
                 "chainId": 42161,
                 "address": "0xE5cE02443942B006d0851d6e73d9dbEeE743b88d",
-            }
+            },
+            {
+                "chainId": 10,
+                "address": "0xCbE04EDe27B30B1C664e777fbF09ae9d62412FD8",
+            },
+            {
+                "chainId": 137,
+                "address": "0xf3fD346138C93Cb1c5be1145566e915e54DC5A56",
+            },
+            {
+                "chainId": 8453,
+                "address": "0xCbE04EDe27B30B1C664e777fbF09ae9d62412FD8",
+            },
         ],
     }
 
