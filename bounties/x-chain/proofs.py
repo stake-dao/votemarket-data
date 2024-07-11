@@ -162,6 +162,8 @@ def main():
 
         for platform_data in platforms:
             w3 = Utils.get_web3(platform_data["chainId"])
+            print("chainId", platform_data["chainId"])
+            print("address", platform_data["address"])
             vm = Utils.load_contract(w3, platform_data["address"], platform_l2_abi)
             bounties = Utils.get_active_bounties(vm, current_period, w3)
             # Filter out empty bounties and add chainId as a key

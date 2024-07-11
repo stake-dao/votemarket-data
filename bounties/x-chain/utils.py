@@ -12,7 +12,7 @@ class Constants:
     ETHEREUM_STATE_SENDER = "0x189B2c0e4e8e221173f266f311C949498A4859D1"
     MAINNET_URL = "https://eth-mainnet.g.alchemy.com/v2/" + os.getenv("ALCHEMY_API_KEY")
     ARBITRUM_URL = "https://arb1.arbitrum.io/rpc"
-    OPTIMISM_URL = "https://optimism.llamarpc.com"
+    OPTIMISM_URL = "https://opt-mainnet.g.alchemy.com/v2/" + os.getenv("ALCHEMY_API_KEY")
     BASE_URL = "https://base.llamarpc.com"
     POLYGON_URL = "https://polygon.llamarpc.com"
 
