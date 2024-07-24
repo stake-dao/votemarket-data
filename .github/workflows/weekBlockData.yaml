@@ -1,7 +1,9 @@
 name: Votemarket_XChain - Setting JSON of Block Header + hash (retrieved from Eth State Sender on latest period)
 on:
   workflow_dispatch:
-
+  schedule:
+    - cron: '5 1 * * 4' # Every Thursday at 01:05 UTC
+    
 env:
   ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
   AGNOSTIC_ENDPOINT: ${{ secrets.AGNOSTIC_ENDPOINT}}
