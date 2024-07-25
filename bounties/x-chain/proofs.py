@@ -258,7 +258,7 @@ def main():
                         latest_header_proof,
                     )
                 # Transform blacklist [] into {user: proof}
-                blacklist_proofs[user] = proof.hex()
+                blacklist_proofs[user] = proof
 
             # Replace "blacklist" by blacklist_proof
             bounty["blacklist"] = blacklist_proofs

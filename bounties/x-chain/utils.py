@@ -13,7 +13,7 @@ class Constants:
     MAINNET_URL = "https://eth-mainnet.g.alchemy.com/v2/" + os.getenv("ALCHEMY_API_KEY")
     ARBITRUM_URL = "https://arb1.arbitrum.io/rpc"
     OPTIMISM_URL = "https://opt-mainnet.g.alchemy.com/v2/" + os.getenv("ALCHEMY_API_KEY")
-    BASE_URL = "https://base.llamarpc.com"
+    BASE_URL = "https://base-mainnet.g.alchemy.com/v2/" + os.getenv("ALCHEMY_API_KEY")
     POLYGON_URL = "https://polygon.llamarpc.com"
 
     AGNOSTIC_ENDPOINT = os.getenv("AGNOSTIC_ENDPOINT")
