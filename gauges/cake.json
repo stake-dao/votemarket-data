@@ -5699,7 +5699,7 @@
             "chainId": 42161,
             "type": 2,
             "token0Address": "0x3082CC23568eA640225c2467653dB90e9250AaA0",
-            "token1Address": "0xaf88d065e77c8cC2239327C5EDb3A432268e5831",
+            "token1Address": "0x82aF49447D8a07e3bd95BD0d56f35241523fBab1",
             "pid": 0,
             "hash": "0xa2f30f28312e7015667ee1a1ad317748e920819547a9782c7b1df80fef09ae1a",
             "pairAddress": "0xD6d29209C256aD605cAB2a0aa3A7e68BA25bD9E6",
@@ -7746,13 +7746,17 @@
             "weight": "4211970960575083725773"
         },
         {
-            "gid": 466,
-            "pairName": "ZK-WETH",
-            "address": "0xb69c27573aED955e40905ac6Dba431aaeB88Feab",
             "chainId": 324,
+            "gid": 466,
+            "address": "0xb69c27573aED955e40905ac6Dba431aaeB88Feab",
             "type": 2,
+            "pairName": "ZK-WETH",
             "token0Address": "0x5A7d6b2F92C77FAD6CCaBd7EE0624E64907Eaf3E",
-            "token1Address": "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
+            "token1Address": "0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91",
+            "token0symbol": "ZK",
+            "token0name": "ZKsync",
+            "token1symbol": "WETH",
+            "token1name": "Wrapped Ether",
             "pid": 0,
             "hash": "0x493305e7eef1221a904ee5098675e9bba83982da3860b81e9cc356b9998c4616",
             "pairAddress": "0xb69c27573aED955e40905ac6Dba431aaeB88Feab",
@@ -7767,8 +7771,8 @@
             "address": "0x8b55A31110d716F50009e02C337A16cA4EA9b675",
             "chainId": 324,
             "type": 2,
-            "token0Address": "0x2170Ed0880ac9A755fd29B2688956BD959F933F8",
-            "token1Address": "0x5A7d6b2F92C77FAD6CCaBd7EE0624E64907Eaf3E",
+            "token0Address": "0x5A7d6b2F92C77FAD6CCaBd7EE0624E64907Eaf3E",
+            "token1Address": "0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91",
             "pid": 0,
             "hash": "0x8140b5621c10eaeb3745c3d7d376487785a7e2a08a2b297b8c1cb41be680fa21",
             "pairAddress": "0x8b55A31110d716F50009e02C337A16cA4EA9b675",
@@ -9272,5 +9276,5 @@
             "weight": "4211970960575083725773"
         }
     ],
-    "lastUpdated": 1728527851127
+    "lastUpdated": 1728529104020
 }
