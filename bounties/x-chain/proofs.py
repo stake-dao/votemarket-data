@@ -1,6 +1,6 @@
-import json, os, logging
+import json, os, logging, asyncio
 from eth_abi import encode
-from eth_utils import keccak
+from eth_utils import keccak, to_checksum_address
 from utils import Utils, Constants
 
 logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
@@ -19,32 +19,32 @@ def generate_proof(
     vote_user_slope_base_slot = Constants.GAUGES_SLOTS[protocol]["vote_user_slope"]
 
     last_user_vote_position = get_position_from_user_gauge(
-        w3_eth.toChecksumAddress(user.lower()),
-        w3_eth.toChecksumAddress(gauge_address.lower()),
+        to_checksum_address(user.lower()),
+        to_checksum_address(gauge_address.lower()),
         last_user_vote_base_slot,
     )
 
     if protocol == "curve":
         point_weights_position = get_position_from_gauge_time_old(
-            w3_eth.toChecksumAddress(gauge_address.lower()),
+            to_checksum_address(gauge_address.lower()),
             current_period,
             point_weights_base_slot,
         )
         vote_user_slope_position = get_position_from_user_gauge_old(
-            w3_eth.toChecksumAddress(user.lower()),
-            w3_eth.toChecksumAddress(gauge_address.lower()),
+            to_checksum_address(user.lower()),
+            to_checksum_address(gauge_address.lower()),
             vote_user_slope_base_slot,
         )
 
     else:
         point_weights_position = get_position_from_gauge_time(
-            w3_eth.toChecksumAddress(gauge_address.lower()),
+            to_checksum_address(gauge_address.lower()),
             current_period,
             point_weights_base_slot,
         )
         vote_user_slope_position = get_position_from_user_gauge(
-            w3_eth.toChecksumAddress(user.lower()),
-            w3_eth.toChecksumAddress(gauge_address.lower()),
+            to_checksum_address(user.lower()),
+            to_checksum_address(gauge_address.lower()),
             vote_user_slope_base_slot,
         )
 
@@ -64,7 +64,7 @@ def generate_proof(
 
     # Proof (RLP)
     raw_proof = w3_eth.eth.get_proof(
-        w3_eth.toChecksumAddress(Constants.GAUGE_CONTROLLER[protocol].lower()),
+        to_checksum_address(Constants.GAUGE_CONTROLLER[protocol].lower()),
         positions,
         int(latest_header_proof["BlockNumber"]),
     )
@@ -126,7 +126,7 @@ def get_position_from_gauge_time_old(gauge, time, base_slot):
     return int.from_bytes(final_slot, byteorder="big")
 
 
-def main():
+async def main():
     # Get web3 instance on Ethereum
     w3_eth = Utils.get_web3(1)
 
@@ -176,7 +176,7 @@ def main():
             ]
 
         all_gauges = [
-            w3.toChecksumAddress(bounty["gauge_address"].lower())
+            to_checksum_address(bounty["gauge_address"].lower())
             for bounty in active_bounties
         ]
 
@@ -184,8 +184,8 @@ def main():
             logging.info(f"No active bounties found for {protocol}")
             continue
 
-        all_voters_for_active_bounties = Utils.query_all_voters_gauges(
-            gauge_controller, all_gauges
+        all_voters_for_active_bounties = await Utils.query_all_voters_gauges(
+            protocol, all_gauges
         )
 
         if len(all_voters_for_active_bounties) == 0:
@@ -228,11 +228,11 @@ def main():
 
         # Add proofs for blacklist (if any) + Add user proofs per bounty ids
         for bounty in active_bounties:
-            for user in active_users_for_gauges[bounty["gauge_address"]]:
+            for user in active_users_for_gauges[to_checksum_address(bounty["gauge_address"])]:
                 if "user_proofs" not in bounty:
                     bounty["user_proofs"] = {}
                 bounty["user_proofs"][user] = active_users_for_gauges[
-                    bounty["gauge_address"]
+                    to_checksum_address(bounty["gauge_address"])
                 ][user]["proof"]
 
             if len(bounty["blacklist"]) == 0:
@@ -244,15 +244,15 @@ def main():
 
             for user in bounty["blacklist"]:
                 # If user / gauge is already present in active_users_for_gauges; take it
-                if user in active_users_for_gauges[bounty["gauge_address"]]:
-                    proof = active_users_for_gauges[bounty["gauge_address"]][user][
+                if user in active_users_for_gauges[to_checksum_address(bounty["gauge_address"])]:
+                    proof = active_users_for_gauges[to_checksum_address(bounty["gauge_address"])][user][
                         "proof"
                     ]
                 else:
                     proof = generate_proof(
                         w3_eth,
                         protocol,
-                        bounty["gauge_address"],
+                        to_checksum_address(bounty["gauge_address"]),
                         user,
                         current_period,
                         latest_header_proof,
@@ -270,6 +270,5 @@ def main():
         with open(f"bounties/x-chain/{current_period}/{protocol}.json", "w") as f:
             json.dump(protocol_data[protocol], f, indent=4)
 
-
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())
