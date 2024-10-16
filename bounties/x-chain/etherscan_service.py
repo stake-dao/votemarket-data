@@ -17,7 +17,7 @@ load_dotenv()
 EXPLORER_APIS = {
     "1": {
         "url": "https://api.etherscan.io/api",
-        "key": "DPXTG485PQZDKJKQVIKWRS4A4M8XXM15HP"#os.getenv("ETHERSCAN_TOKEN", "")
+        "key": os.getenv("ETHERSCAN_TOKEN", "")
     },
     "42161": {
         "url": "https://api.arbiscan.io/api",
