@@ -6,8 +6,7 @@ on:
     
 env:
   ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
-  AGNOSTIC_ENDPOINT: ${{ secrets.AGNOSTIC_ENDPOINT}}
-  AGNOSTIC_API_KEY: ${{ secrets.AGNOSTIC_API_KEY}}
+  ETHERSCAN_TOKEN: ${{ secrets.ETHERSCAN_TOKEN }}
 
 jobs:
   build:

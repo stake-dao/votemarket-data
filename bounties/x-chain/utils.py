@@ -1,9 +1,17 @@
+import asyncio
 import os, json, rlp
-import requests
+import logging
 from dotenv import load_dotenv
 from web3 import Web3
 from w3multicall.multicall import W3Multicall
 from hexbytes import HexBytes
+from eth_utils import to_checksum_address
+
+from etherscan_service import get_logs_by_address_and_topics
+from parquet_cache_service import ParquetCache
+
+
+logging.basicConfig(format="%(levelname)s: %(message)s", level=logging.INFO)
 
 load_dotenv()
 
@@ -12,15 +20,12 @@ class Constants:
     ETHEREUM_STATE_SENDER = "0x189B2c0e4e8e221173f266f311C949498A4859D1"
     MAINNET_URL = "https://eth-mainnet.g.alchemy.com/v2/" + os.getenv("ALCHEMY_API_KEY")
     ARBITRUM_URL = "https://arb1.arbitrum.io/rpc"
-    OPTIMISM_URL = "https://opt-mainnet.g.alchemy.com/v2/" + os.getenv("ALCHEMY_API_KEY")
+    OPTIMISM_URL = "https://opt-mainnet.g.alchemy.com/v2/" + os.getenv(
+        "ALCHEMY_API_KEY"
+    )
     BASE_URL = "https://base-mainnet.g.alchemy.com/v2/" + os.getenv("ALCHEMY_API_KEY")
     POLYGON_URL = "https://polygon.llamarpc.com"
 
-    AGNOSTIC_ENDPOINT = os.getenv("AGNOSTIC_ENDPOINT")
-    AGNOSTIC_HEADERS = {
-        "Authorization": os.getenv("AGNOSTIC_API_KEY"),
-        "Cache-Control": "max-age=300",
-    }
     PROTOCOLS = ["curve", "balancer", "frax", "fxn"]
 
     # To get positions
@@ -129,6 +134,17 @@ class Constants:
         "fxn": "0xe60eB8098B34eD775ac44B1ddE864e098C6d7f37",
     }
 
+    CREATION_BLOCKS = {
+        "curve": 10647875,
+        "balancer": 14457014,
+        "frax": 14052749,
+        "fxn": 18156185,
+    }
+
+    VOTE_EVENT_HASH = (
+        "0x45ca9a4c8d0119eb329e580d28fe689e484e1be230da8037ade9547d2d25cc91"
+    )
+
     """ Types """
 
     ActiveBountyType = {
@@ -163,7 +179,7 @@ class Utils:
     @staticmethod
     def load_contract(w3, address, abi):
         return w3.eth.contract(
-            address=Web3.toChecksumAddress(address),
+            address=to_checksum_address(address),
             abi=abi,
         )
 
@@ -180,7 +196,7 @@ class Utils:
     def get_event_logs(
         w3, contract_address, abi, event_name, from_block, to_block, filters=None
     ):
-        contract_address = Web3.toChecksumAddress(contract_address.lower())
+        contract_address = to_checksum_address(contract_address.lower())
         contract = w3.eth.contract(address=contract_address, abi=Utils.load_json(abi))
         return getattr(contract.events, event_name).getLogs(
             fromBlock=from_block, toBlock=to_block, argument_filters=filters
@@ -246,41 +262,132 @@ class Utils:
         return active_bounties
 
     @staticmethod
-    def query_all_voters_gauges(gauge_controller, gauge_addresses):
-        # Fetch votes
-        gaugesString = "'" + "','".join(str(s) for s in gauge_addresses) + "'"
+    async def query_all_voters_gauges(protocol, gauge_addresses):
+        w3 = Utils.get_web3(1)
+        current_block = w3.eth.get_block("latest")["number"]
 
-        # Get all voters
-        query = """
-                                    select 
-                                        input_1_value_address as user,
-                                        input_2_value_address as gauge
-                                    from evm_events_ethereum_mainnet 
-                                    WHERE 
-                                        address IN ('{gauge_controller}') and 
-                                        input_2_value_address IN ({gauges}) and 
-                                        signature = 'VoteForGauge(uint256,address,address,uint256)' 
-                                    GROUP BY user, gauge
-                                """.format(
-            gauge_controller=gauge_controller,
-            gauges=gaugesString,
+        all_votes = {}
+
+        for gauge_address in gauge_addresses:
+            votes = await Utils.query_gauge_votes(
+                w3, protocol, gauge_address, current_block
+            )
+            if gauge_address not in all_votes:
+                all_votes[gauge_address] = []
+            all_votes[gauge_address].extend([vote["user"] for vote in votes])
+
+        return all_votes
+
+    @staticmethod
+    async def query_gauge_votes(w3, protocol, gauge_address, block_number):
+        CACHE_DIR = "bounties"
+        VOTES_CACHE_FILE = f"{protocol}_votes_cache.parquet"
+        cache = ParquetCache(CACHE_DIR)
+
+        start_block_list = cache.get_columns(VOTES_CACHE_FILE, ["latest_block"]).get(
+            "latest_block", []
         )
-        agnosticResponse = requests.post(
-            Constants.AGNOSTIC_ENDPOINT, headers=Constants.AGNOSTIC_HEADERS, data=query
+        start_block = (
+            start_block_list[0]
+            if start_block_list
+            else Constants.CREATION_BLOCKS[protocol]
         )
-        if agnosticResponse.status_code != 200:
-            print("Error fetching voters from Agnostic")
-            return []
-        rowsVoted = agnosticResponse.json()["rows"]
 
-        grouped_data = {}
+        end_block = block_number
+        logging.info(
+            f"Getting votes for {gauge_address} from {start_block} to {end_block}"
+        )
 
-        for user, gauge in rowsVoted:
-            if gauge not in grouped_data:
-                grouped_data[gauge] = []
-            grouped_data[gauge].append(user)
+        if start_block < end_block:
+            new_votes = await Utils.fetch_new_votes(
+                w3, protocol, start_block, end_block
+            )
 
-        return grouped_data
+            cached_data = cache.get_columns(
+                VOTES_CACHE_FILE, ["time", "user", "gauge_addr", "weight"]
+            )
+            cached_votes = [
+                {"time": t, "user": u, "gauge_addr": g, "weight": w}
+                for t, u, g, w in zip(
+                    cached_data["time"],
+                    cached_data["user"],
+                    cached_data["gauge_addr"],
+                    cached_data["weight"],
+                )
+            ]
+            all_votes = cached_votes + new_votes
+            cache.save_votes(VOTES_CACHE_FILE, end_block, all_votes)
+        else:
+            logging.info("Using cached data as start block is not less than end block")
+            cached_data = cache.get_columns(
+                VOTES_CACHE_FILE, ["time", "user", "gauge_addr", "weight"]
+            )
+            all_votes = [
+                {"time": t, "user": u, "gauge_addr": g, "weight": w}
+                for t, u, g, w in zip(
+                    cached_data["time"],
+                    cached_data["user"],
+                    cached_data["gauge_addr"],
+                    cached_data["weight"],
+                )
+            ]
+
+        filtered_votes = [
+            vote
+            for vote in all_votes
+            if vote["gauge_addr"].lower() == gauge_address.lower()
+        ]
+
+        return filtered_votes
+
+    @staticmethod
+    async def fetch_new_votes(w3, protocol, start_block, end_block):
+        INCREMENT = 100_000
+        tasks = []
+
+        for block in range(start_block, end_block + 1, INCREMENT):
+            current_end_block = min(block + INCREMENT - 1, end_block)
+            task = asyncio.create_task(
+                Utils.fetch_votes_chunk(w3, protocol, block, current_end_block)
+            )
+            tasks.append(task)
+
+        chunks = await asyncio.gather(*tasks)
+        return [vote for chunk in chunks for vote in chunk]
+
+    @staticmethod
+    async def fetch_votes_chunk(w3, protocol, start_block, end_block):
+        logging.info(f"Getting logs from {start_block} to {end_block}")
+        try:
+            votes_logs = get_logs_by_address_and_topics(
+                Constants.GAUGE_CONTROLLER[protocol],
+                start_block,
+                end_block,
+                {"0": Constants.VOTE_EVENT_HASH},
+            )
+            logging.info(f"{len(votes_logs)} votes logs found")
+            return [Utils._decode_vote_log(log) for log in votes_logs]
+        except Exception as e:
+            if "No records found" in str(e):
+                logging.info(f"No votes found from {start_block} to {end_block}")
+                return []
+            else:
+                raise
+
+    @staticmethod
+    def _decode_vote_log(log):
+        data = bytes.fromhex(log["data"][2:])
+        try:
+            return {
+                "time": int.from_bytes(data[0:32], byteorder="big"),
+                "user": to_checksum_address("0x" + data[44:64].hex()),
+                "gauge_addr": to_checksum_address("0x" + data[76:96].hex()),
+                "weight": int.from_bytes(data[96:128], byteorder="big"),
+            }
+        except ValueError as e:
+            raise ValueError(
+                f"Error decoding vote log: {str(e)}. Raw data: {log['data']}"
+            )
 
     @staticmethod
     def check_eligibility(w3, gauge_controller, user, gauge_address, current_period):
@@ -298,12 +405,12 @@ class Utils:
 
         # Check the slope of that user for the gauge
         last_vote = gauge_controller.functions.last_user_vote(
-            w3.toChecksumAddress(user.lower()),
-            w3.toChecksumAddress(gauge_address.lower()),
+            to_checksum_address(user.lower()),
+            to_checksum_address(gauge_address.lower()),
         ).call()
-        (slope, power, end) = gauge_controller.functions.vote_user_slopes(
-            w3.toChecksumAddress(user.lower()),
-            w3.toChecksumAddress(gauge_address.lower()),
+        (slope, _, end) = gauge_controller.functions.vote_user_slopes(
+            to_checksum_address(user.lower()),
+            to_checksum_address(gauge_address.lower()),
         ).call()
 
         if slope != 0 and current_period < end and current_period > last_vote:
