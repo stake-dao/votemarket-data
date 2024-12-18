@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '5 1 * * 4' # Every Thursday at 01:05 UTC
-    
+
 env:
   ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
   ETHERSCAN_TOKEN: ${{ secrets.ETHERSCAN_TOKEN }}
