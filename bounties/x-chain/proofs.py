@@ -55,12 +55,12 @@ def generate_proof(
     points_weights_bias = point_weights_position
     points_weights_slope = point_weights_position + 1
 
-    positions.append(w3_eth.toHex(last_user_vote_position))
-    positions.append(w3_eth.toHex(points_weights_bias))
-    positions.append(w3_eth.toHex(points_weights_slope))
-    positions.append(w3_eth.toHex(vote_user_slope_slope))
-    positions.append(w3_eth.toHex(vote_user_slope_power))
-    positions.append(w3_eth.toHex(vote_user_slope_end))
+    positions.append(w3_eth.to_hex(last_user_vote_position))
+    positions.append(w3_eth.to_hex(points_weights_bias))
+    positions.append(w3_eth.to_hex(points_weights_slope))
+    positions.append(w3_eth.to_hex(vote_user_slope_slope))
+    positions.append(w3_eth.to_hex(vote_user_slope_power))
+    positions.append(w3_eth.to_hex(vote_user_slope_end))
 
     # Proof (RLP)
     raw_proof = w3_eth.eth.get_proof(
