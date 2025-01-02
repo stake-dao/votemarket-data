@@ -14,7 +14,44 @@ def fetch(url, file):
     writeGauges(config, file)
 
 def cake():
-    fetch("https://pancakeswap.finance/api/gauges/getAllGauges?inCap=true&testnet=", "cake.json")
+    urlsResponse = requests.get("https://pancakeswap.finance/api/gauges/getAllGauges?inCap=true&testnet=")
+    if urlsResponse.status_code != 200:
+        return
+    urlsResponse = urlsResponse.json()
+    
+    if "data" not in urlsResponse:
+        return
+    
+    data = urlsResponse["data"]
+
+    # Fetch all chain id for position manager
+    chain_ids = {}
+    for gaugeData in data:
+        if "chainId" in gaugeData:
+            chain_ids[gaugeData["chainId"]] = True
+
+    for chain_id in chain_ids:
+        response = requests.get(f"https://configs.pancakeswap.com/api/data/cached/positionManagers?chainId={chain_id}")
+        if response.status_code != 200:
+            continue
+        response = response.json()
+        
+        for positionManager in response:
+            if "idByManager" not in positionManager or "name" not in positionManager or "vaultAddress" not in positionManager:
+                continue
+            vault_address = positionManager["vaultAddress"]
+            id_by_manager = positionManager["idByManager"]
+            name = positionManager["name"]
+
+            for gaugeData in data:
+                if "address" not in gaugeData:
+                    continue
+
+                if gaugeData["address"].lower() == vault_address.lower():
+                    gaugeData["pairName"] += f" {name}#{id_by_manager}"
+                    break
+
+    writeGauges(urlsResponse, "cake.json")
 
 def curve():
     fetch("https://api.curve.fi/api/getAllGauges", "curve.json")
