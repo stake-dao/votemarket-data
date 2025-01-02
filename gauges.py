@@ -44,10 +44,10 @@ def cake():
             name = positionManager["name"]
 
             for gaugeData in data:
-                if "address" not in gaugeData:
+                if "address" not in gaugeData or "chainId" not in gaugeData:
                     continue
 
-                if gaugeData["address"].lower() == vault_address.lower():
+                if gaugeData["address"].lower() == vault_address.lower() and str(gaugeData["chainId"]) == str(chain_id) :
                     gaugeData["pairName"] += f" {name}#{id_by_manager}"
                     break
 
