@@ -10,7 +10,7 @@ def isNullAddress(addr):
     
 def bounties(config): 
     w3 = Web3(Web3.HTTPProvider('https://rpc.ankr.com/eth'))
-    if w3.is_connected() == False:
+    if w3.isConnected() == False:
         logging.error("RPC down")
         return
 
@@ -20,7 +20,7 @@ def bounties(config):
     bountiesClosedData = {}
 
     for platform in platforms:
-        platformContract = w3.eth.contract(address=Web3.to_checksum_address(platform["contract"]), abi=platformAbi)
+        platformContract = w3.eth.contract(address=Web3.toChecksumAddress(platform["contract"]), abi=platformAbi)
         nextID = platformContract.functions.nextID().call()
         currentPeriod = platformContract.functions.getCurrentPeriod().call()
 
@@ -52,9 +52,9 @@ def bounties(config):
                 bountyClosable["manager"] = bounty[1]
                 bountiesClosable.append(bountyClosable)
 
-        bountiesClosedData[Web3.to_checksum_address(platform["contract"])] = {}
-        bountiesClosedData[Web3.to_checksum_address(platform["contract"])]["bountiesClosed"] = bountiesClosed
-        bountiesClosedData[Web3.to_checksum_address(platform["contract"])]["bountiesClosable"] = bountiesClosable
+        bountiesClosedData[Web3.toChecksumAddress(platform["contract"])] = {}
+        bountiesClosedData[Web3.toChecksumAddress(platform["contract"])]["bountiesClosed"] = bountiesClosed
+        bountiesClosedData[Web3.toChecksumAddress(platform["contract"])]["bountiesClosable"] = bountiesClosable
     
     json_object = json.dumps(bountiesClosedData, indent=4)
     with open("./bounties/closed.json", "w") as outfile:
