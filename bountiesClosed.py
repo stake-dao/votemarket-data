@@ -63,6 +63,7 @@ def bounties(config):
 def main():
     urlsResponse = requests.get("https://classic.votemarket.org/platforms/index.json")
     if urlsResponse.status_code != 200:
+        print(urlsResponse)
         return
 
     config = urlsResponse.json()
