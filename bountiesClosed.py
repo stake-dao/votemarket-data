@@ -9,8 +9,8 @@ def isNullAddress(addr):
     return addr == "0x0000000000000000000000000000000000000000"
     
 def bounties(config): 
-    w3 = Web3(Web3.HTTPProvider('https://eth.drpc.org'))
-    if w3.isConnected() == False:
+    w3 = Web3(Web3.HTTPProvider('https://rpc.ankr.com/eth'))
+    if w3.is_connected() == False:
         logging.error("RPC down")
         return
 
@@ -20,8 +20,9 @@ def bounties(config):
     bountiesClosedData = {}
 
     for platform in platforms:
-        platformContract = w3.eth.contract(address=Web3.toChecksumAddress(platform["contract"]), abi=platformAbi)
+        platformContract = w3.eth.contract(address=Web3.to_checksum_address(platform["contract"]), abi=platformAbi)
         nextID = platformContract.functions.nextID().call()
+        currentPeriod = platformContract.functions.getCurrentPeriod().call()
         
         bountiesClosed = []
         bountiesClosable = []
@@ -38,7 +39,7 @@ def bounties(config):
             # We have to check if the bounty is closable
             # Check if we have an upgrade in queue
             upgrade = platformContract.functions.upgradeBountyQueue(i).call()
-            currentPeriod = platformContract.functions.getCurrentPeriod().call()
+            
             isClosable = False
             if upgrade[0] > 0:
                 isClosable = upgrade[3] <= currentPeriod
@@ -51,16 +52,16 @@ def bounties(config):
                 bountyClosable["manager"] = bounty[1]
                 bountiesClosable.append(bountyClosable)
 
-        bountiesClosedData[Web3.toChecksumAddress(platform["contract"])] = {}
-        bountiesClosedData[Web3.toChecksumAddress(platform["contract"])]["bountiesClosed"] = bountiesClosed
-        bountiesClosedData[Web3.toChecksumAddress(platform["contract"])]["bountiesClosable"] = bountiesClosable
+        bountiesClosedData[Web3.to_checksum_address(platform["contract"])] = {}
+        bountiesClosedData[Web3.to_checksum_address(platform["contract"])]["bountiesClosed"] = bountiesClosed
+        bountiesClosedData[Web3.to_checksum_address(platform["contract"])]["bountiesClosable"] = bountiesClosable
     
     json_object = json.dumps(bountiesClosedData, indent=4)
     with open("./bounties/closed.json", "w") as outfile:
         outfile.write(json_object)
 
 def main():
-    urlsResponse = requests.get("https://votemarket.stakedao.org/platforms/index.json")
+    urlsResponse = requests.get("https://classic.votemarket.org/platforms/index.json")
     if urlsResponse.status_code != 200:
         return
 
