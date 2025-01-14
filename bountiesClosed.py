@@ -23,11 +23,11 @@ def bounties(config):
         platformContract = w3.eth.contract(address=Web3.to_checksum_address(platform["contract"]), abi=platformAbi)
         nextID = platformContract.functions.nextID().call()
         currentPeriod = platformContract.functions.getCurrentPeriod().call()
-        
+
         bountiesClosed = []
         bountiesClosable = []
         for i in range(nextID):
-
+            print(f"{platform} - {i}")
             # Fetch bounty
             bounty = platformContract.functions.getBounty(i).call()
 
