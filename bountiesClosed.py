@@ -20,11 +20,14 @@ def getRpcUrl(chainId):
 def bounties(config): 
 
     platforms = config["platforms"]
-    platformAbi = load_json("Platform")
 
     bountiesClosedData = {}
 
     for platform in platforms:
+        platformAbi = load_json("Platform")
+        if platform["chainId"] == 56:
+            platformAbi = load_json("PlatformBSC")
+
         w3 = Web3(Web3.HTTPProvider(getRpcUrl(platform["chainId"])))
         if platform["chainId"] != 1:
             w3.middleware_onion.inject(geth_poa_middleware, layer=0)
@@ -34,7 +37,12 @@ def bounties(config):
             continue
         platformContract = w3.eth.contract(address=Web3.toChecksumAddress(platform["contract"]), abi=platformAbi)
         nextID = platformContract.functions.nextID().call()
-        currentPeriod = platformContract.functions.getCurrentPeriod().call()
+
+        currentPeriod = 0
+        if platform["chainId"] == 56:
+            currentPeriod = platformContract.functions.getCurrentEpoch().call()
+        else:
+            currentPeriod = platformContract.functions.getCurrentPeriod().call()
 
         bountiesClosed = []
         bountiesClosable = []
@@ -43,8 +51,12 @@ def bounties(config):
             # Fetch bounty
             bounty = platformContract.functions.getBounty(i).call()
 
-            # If closed, we mark it as closed and we skip 
-            if isNullAddress(bounty[1]):
+            # If closed, we mark it as closed and we skip
+            manager = bounty[1]
+            if platform["chainId"] == 56:
+                manager = bounty[2]
+                
+            if isNullAddress(manager):
                 bountiesClosed.append(i)
                 continue
 
@@ -56,12 +68,15 @@ def bounties(config):
             if upgrade[0] > 0:
                 isClosable = upgrade[3] <= currentPeriod
             else:
-                isClosable = bounty[4] <= currentPeriod
+                if platform["chainId"] == 56:
+                    isClosable = bounty[5] <= currentPeriod
+                else:
+                    isClosable = bounty[4] <= currentPeriod
 
             if isClosable:
                 bountyClosable = {}
                 bountyClosable["id"] = i
-                bountyClosable["manager"] = bounty[1]
+                bountyClosable["manager"] = manager
                 bountiesClosable.append(bountyClosable)
 
         bountiesClosedData[Web3.toChecksumAddress(platform["contract"])] = {}
