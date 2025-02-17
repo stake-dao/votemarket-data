@@ -22,7 +22,10 @@ def cake():
     if "data" not in urlsResponse:
         return
     
-    data = urlsResponse["data"]
+    data = []
+    for gauge in urlsResponse["data"]:
+        if "address" in gauge:
+            data.append(gauge)
 
     # Fetch all chain id for position manager
     chain_ids = {}
