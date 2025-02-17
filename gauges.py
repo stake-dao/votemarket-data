@@ -27,6 +27,8 @@ def cake():
         if "address" in gauge:
             data.append(gauge)
 
+    urlsResponse["data"] = data
+
     # Fetch all chain id for position manager
     chain_ids = {}
     for gaugeData in data:
