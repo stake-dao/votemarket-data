@@ -9,14 +9,6 @@
     },
     {
         "gauge": {
-            "address": "0x2d1c51eab8b3c2287ba26061c0e339da3b15b955",
-            "isKilled": false
-        },
-        "symbol": "Surge orbETH-Aave wETH",
-        "chain": "ARBITRUM"
-    },
-    {
-        "gauge": {
             "address": "0x1b7e33186c7e9c337508bb65ea9dc498ab14fcae",
             "isKilled": false
         },
@@ -33,11 +25,11 @@
     },
     {
         "gauge": {
-            "address": "0x1cce9d493224a19fcb5f7fbade8478630141cb54",
+            "address": "0x2d1c51eab8b3c2287ba26061c0e339da3b15b955",
             "isKilled": false
         },
-        "symbol": "Surge Fluid wstETH-wETH",
-        "chain": "MAINNET"
+        "symbol": "Surge orbETH-Aave wETH",
+        "chain": "ARBITRUM"
     },
     {
         "gauge": {
@@ -45,6 +37,14 @@
             "isKilled": false
         },
         "symbol": "Surge sUSDX USDX aUSDT",
+        "chain": "MAINNET"
+    },
+    {
+        "gauge": {
+            "address": "0x1cce9d493224a19fcb5f7fbade8478630141cb54",
+            "isKilled": false
+        },
+        "symbol": "Surge Fluid wstETH-wETH",
         "chain": "MAINNET"
     },
     {
@@ -89,6 +89,14 @@
     },
     {
         "gauge": {
+            "address": "0x78a54c8f4eaba82e45cbc20b9454a83cb296e09e",
+            "isKilled": false
+        },
+        "symbol": "50COIL-50USDC",
+        "chain": "MAINNET"
+    },
+    {
+        "gauge": {
             "address": "0xe77d45b5de97ac7717e4ede6be16e3d805ff02a5",
             "isKilled": false
         },
@@ -97,10 +105,10 @@
     },
     {
         "gauge": {
-            "address": "0x78a54c8f4eaba82e45cbc20b9454a83cb296e09e",
+            "address": "0x5af3b93fb82ab8691b82a09cbbae7b8d3eb5ac11",
             "isKilled": false
         },
-        "symbol": "50COIL-50USDC",
+        "symbol": "B-baoUSD-LUSD-BPT",
         "chain": "MAINNET"
     },
     {
@@ -125,14 +133,6 @@
             "isKilled": false
         },
         "symbol": "20B-baoETH-ETH-BPT-80BAO",
-        "chain": "MAINNET"
-    },
-    {
-        "gauge": {
-            "address": "0x5af3b93fb82ab8691b82a09cbbae7b8d3eb5ac11",
-            "isKilled": false
-        },
-        "symbol": "B-baoUSD-LUSD-BPT",
         "chain": "MAINNET"
     },
     {
@@ -217,18 +217,18 @@
     },
     {
         "gauge": {
-            "address": "0x0021e01b9fab840567a8291b864ff783894eabc6",
-            "isKilled": false
-        },
-        "symbol": "wstETH-rETH-sfrxETH-BPT",
-        "chain": "MAINNET"
-    },
-    {
-        "gauge": {
             "address": "0x7fc115bf013844d6ef988837f7ae6398af153532",
             "isKilled": false
         },
         "symbol": "20WETH-80T",
+        "chain": "MAINNET"
+    },
+    {
+        "gauge": {
+            "address": "0x0021e01b9fab840567a8291b864ff783894eabc6",
+            "isKilled": false
+        },
+        "symbol": "wstETH-rETH-sfrxETH-BPT",
         "chain": "MAINNET"
     },
     {
@@ -329,6 +329,14 @@
     },
     {
         "gauge": {
+            "address": "0xa4c104ab9116a84714c081e0ed6d750221e4c756",
+            "isKilled": false
+        },
+        "symbol": "20WMATIC-80SPHERE",
+        "chain": "POLYGON"
+    },
+    {
+        "gauge": {
             "address": "0x671ed21480acf63b0ab7297b901505f5bccafa9b",
             "isKilled": false
         },
@@ -337,11 +345,11 @@
     },
     {
         "gauge": {
-            "address": "0xa4c104ab9116a84714c081e0ed6d750221e4c756",
+            "address": "0x2d42910d826e5500579d121596e98a6eb33c0a1b",
             "isKilled": false
         },
-        "symbol": "20WMATIC-80SPHERE",
-        "chain": "POLYGON"
+        "symbol": "B-wjAura-wETH",
+        "chain": "MAINNET"
     },
     {
         "gauge": {
@@ -358,14 +366,6 @@
         },
         "symbol": "BRLA-sDAI",
         "chain": "GNOSIS"
-    },
-    {
-        "gauge": {
-            "address": "0x2d42910d826e5500579d121596e98a6eb33c0a1b",
-            "isKilled": false
-        },
-        "symbol": "B-wjAura-wETH",
-        "chain": "MAINNET"
     },
     {
         "gauge": {
@@ -401,19 +401,19 @@
     },
     {
         "gauge": {
-            "address": "0x9965713498c74aee49cef80b2195461f188f24f8",
-            "isKilled": false
-        },
-        "symbol": "maticX-WMATIC-BPT",
-        "chain": "POLYGON"
-    },
-    {
-        "gauge": {
             "address": "0x93ae6971f03ce890fa4e9274ab441477b84dae5f",
             "isKilled": false
         },
         "symbol": "B-50wstETH-50COW",
         "chain": "GNOSIS"
+    },
+    {
+        "gauge": {
+            "address": "0x9965713498c74aee49cef80b2195461f188f24f8",
+            "isKilled": false
+        },
+        "symbol": "maticX-WMATIC-BPT",
+        "chain": "POLYGON"
     },
     {
         "gauge": {
@@ -465,6 +465,14 @@
     },
     {
         "gauge": {
+            "address": "0x253ed65fff980aee7e94a0dc57be304426048b35",
+            "isKilled": false
+        },
+        "symbol": "weETH/ezETH/rswETH",
+        "chain": "MAINNET"
+    },
+    {
+        "gauge": {
             "address": "0x4a7475d32ccd29edd65b2a1712b091aa741ba9bb",
             "isKilled": false
         },
@@ -473,10 +481,10 @@
     },
     {
         "gauge": {
-            "address": "0x253ed65fff980aee7e94a0dc57be304426048b35",
+            "address": "0x2fa29bbfd19314b3faf170dc7826ef69372203a6",
             "isKilled": false
         },
-        "symbol": "weETH/ezETH/rswETH",
+        "symbol": "50APW-50WETH",
         "chain": "MAINNET"
     },
     {
@@ -489,14 +497,6 @@
     },
     {
         "gauge": {
-            "address": "0x2fa29bbfd19314b3faf170dc7826ef69372203a6",
-            "isKilled": false
-        },
-        "symbol": "50APW-50WETH",
-        "chain": "MAINNET"
-    },
-    {
-        "gauge": {
             "address": "0xf7b0751fea697cf1a541a5f57d11058a8fb794ee",
             "isKilled": false
         },
@@ -505,19 +505,19 @@
     },
     {
         "gauge": {
-            "address": "0xc4b6cc9a444337b1cb8cbbdd9de4d983f609c391",
-            "isKilled": false
-        },
-        "symbol": "2BTC",
-        "chain": "ARBITRUM"
-    },
-    {
-        "gauge": {
             "address": "0xdacd99029b4b94cd04fe364aac370829621c1c64",
             "isKilled": false
         },
         "symbol": "BPT-rETH-ETH",
         "chain": "OPTIMISM"
+    },
+    {
+        "gauge": {
+            "address": "0xc4b6cc9a444337b1cb8cbbdd9de4d983f609c391",
+            "isKilled": false
+        },
+        "symbol": "2BTC",
+        "chain": "ARBITRUM"
     },
     {
         "gauge": {
@@ -737,19 +737,19 @@
     },
     {
         "gauge": {
-            "address": "0x9902913ce5439d667774c8f9526064b2bc103b4a",
-            "isKilled": false
-        },
-        "symbol": "20USDC-80THX",
-        "chain": "POLYGON"
-    },
-    {
-        "gauge": {
             "address": "0xf21fa4fb30ca6eafdf567a02aad92e49d6d0752d",
             "isKilled": false
         },
         "symbol": "ECLP-GYD-USDC",
         "chain": "MAINNET"
+    },
+    {
+        "gauge": {
+            "address": "0x9902913ce5439d667774c8f9526064b2bc103b4a",
+            "isKilled": false
+        },
+        "symbol": "20USDC-80THX",
+        "chain": "POLYGON"
     },
     {
         "gauge": {
@@ -937,18 +937,18 @@
     },
     {
         "gauge": {
-            "address": "0xd449efa0a587f2cb6be3ae577bc167a774525810",
-            "isKilled": false
-        },
-        "symbol": "B-baoETH-ETH-BPT",
-        "chain": "MAINNET"
-    },
-    {
-        "gauge": {
             "address": "0xbf65b3fa6c208762ed74e82d4aefcddfd0323648",
             "isKilled": false
         },
         "symbol": "ankrETH/wstETH",
+        "chain": "MAINNET"
+    },
+    {
+        "gauge": {
+            "address": "0xd449efa0a587f2cb6be3ae577bc167a774525810",
+            "isKilled": false
+        },
+        "symbol": "B-baoETH-ETH-BPT",
         "chain": "MAINNET"
     },
     {
@@ -1105,19 +1105,19 @@
     },
     {
         "gauge": {
-            "address": "0x75ba7f8733c154302cbe2e19fe3ec417e0679833",
-            "isKilled": false
-        },
-        "symbol": "2CLP-AUSDC-USDC",
-        "chain": "ARBITRUM"
-    },
-    {
-        "gauge": {
             "address": "0xd98ed0426d18b115d6388923803e33ad8aaf11f8",
             "isKilled": true
         },
         "symbol": "svETH/wstETH",
         "chain": "MAINNET"
+    },
+    {
+        "gauge": {
+            "address": "0x75ba7f8733c154302cbe2e19fe3ec417e0679833",
+            "isKilled": false
+        },
+        "symbol": "2CLP-AUSDC-USDC",
+        "chain": "ARBITRUM"
     },
     {
         "gauge": {
@@ -1233,18 +1233,18 @@
     },
     {
         "gauge": {
-            "address": "0x9c1a157cf8b242f67b3c950eda9a30b320bde9cd",
-            "isKilled": false
-        },
-        "symbol": "ECLP-GYD-USDC",
-        "chain": "MAINNET"
-    },
-    {
-        "gauge": {
             "address": "0x5d0aa3b7f4429e999c95d392e6c50c6555cd7816",
             "isKilled": false
         },
         "symbol": "eBTC/wBTC",
+        "chain": "MAINNET"
+    },
+    {
+        "gauge": {
+            "address": "0x9c1a157cf8b242f67b3c950eda9a30b320bde9cd",
+            "isKilled": false
+        },
+        "symbol": "ECLP-GYD-USDC",
         "chain": "MAINNET"
     },
     {
@@ -1521,19 +1521,19 @@
     },
     {
         "gauge": {
-            "address": "0x0855e486ee80ff0ec7c913ec0588a7cbf2b8e89c",
-            "isKilled": false
-        },
-        "symbol": "Aave wstETH-wETH",
-        "chain": "BASE"
-    },
-    {
-        "gauge": {
             "address": "0x0d1b58fb1fc10f2160178de1eae2d520335ee372",
             "isKilled": false
         },
         "symbol": "sUSDX/USDX",
         "chain": "ARBITRUM"
+    },
+    {
+        "gauge": {
+            "address": "0x0855e486ee80ff0ec7c913ec0588a7cbf2b8e89c",
+            "isKilled": false
+        },
+        "symbol": "Aave wstETH-wETH",
+        "chain": "BASE"
     },
     {
         "gauge": {
@@ -1785,19 +1785,19 @@
     },
     {
         "gauge": {
-            "address": "0xae009634c214c23772a0e19f9aafdff12e89d19d",
-            "isKilled": false
-        },
-        "symbol": "UltraETHs/wETH",
-        "chain": "MAINNET"
-    },
-    {
-        "gauge": {
             "address": "0x5f0a99997ab2acc5097dc5349adf6985761336ac",
             "isKilled": false
         },
         "symbol": "sFRAX/sfrxETH",
         "chain": "FRAXTAL"
+    },
+    {
+        "gauge": {
+            "address": "0xae009634c214c23772a0e19f9aafdff12e89d19d",
+            "isKilled": false
+        },
+        "symbol": "UltraETHs/wETH",
+        "chain": "MAINNET"
     },
     {
         "gauge": {
