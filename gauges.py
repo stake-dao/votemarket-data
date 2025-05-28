@@ -1,78 +1,43 @@
-import requests, json
+#!/usr/bin/env python3
+"""Fetch gauge data from various DeFi protocols."""
 
-def writeGauges(gauges, file):
-    json_object = json.dumps(gauges, indent=4)
-    with open("./gauges/"+file, "w") as outfile:
-        outfile.write(json_object)
+import json
+import logging
+from pathlib import Path
+from typing import Any, Dict
 
-def fetch(url, file):
-    urlsResponse = requests.get(url)
-    if urlsResponse.status_code != 200:
-        return
+import requests
 
-    config = urlsResponse.json()
-    writeGauges(config, file)
+# Configure logging
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
 
-def cake():
-    urlsResponse = requests.get("https://pancakeswap.finance/api/gauges/getAllGauges?inCap=true&testnet=")
-    if urlsResponse.status_code != 200:
-        return
-    urlsResponse = urlsResponse.json()
-    
-    if "data" not in urlsResponse:
-        return
-    
-    data = []
-    for gauge in urlsResponse["data"]:
-        if "address" in gauge:
-            data.append(gauge)
+# Constants
+GAUGES_DIR = Path("./gauges")
+TIMEOUT = 30  # seconds
 
-    urlsResponse["data"] = data
-
-    # Fetch all chain id for position manager
-    chain_ids = {}
-    for gaugeData in data:
-        if "chainId" in gaugeData:
-            chain_ids[gaugeData["chainId"]] = True
-
-    for chain_id in chain_ids:
-        response = requests.get(f"https://configs.pancakeswap.com/api/data/cached/positionManagers?chainId={chain_id}")
-        if response.status_code != 200:
-            continue
-        response = response.json()
-        
-        for positionManager in response:
-            if "idByManager" not in positionManager or "name" not in positionManager or "vaultAddress" not in positionManager:
-                continue
-            vault_address = positionManager["vaultAddress"]
-            id_by_manager = positionManager["idByManager"]
-            name = positionManager["name"]
-
-            for gaugeData in data:
-                if "address" not in gaugeData or "chainId" not in gaugeData:
-                    continue
-
-                if gaugeData["address"].lower() == vault_address.lower() and str(gaugeData["chainId"]) == str(chain_id) :
-                    gaugeData["pairName"] += f" {name}#{id_by_manager}"
-                    break
-
-    writeGauges(urlsResponse, "cake.json")
-
-def curve():
-    fetch("https://api.curve.fi/api/getAllGauges", "curve.json")
-
-def frax():
-    fetch("https://api.frax.finance/v1/gauge/voter-info/0x0000000000000000000000000000000000000000", "frax.json")
-
-def fxn():
-    fetch("https://api.aladdin.club/api1/get_fx_gauge_list", "fxn.json")
-
-def balancer():
-    try:
-        response = requests.post(
-            "https://api-v3.balancer.fi/",
-            json={
-                "query": """
+# Protocol configurations
+PROTOCOLS = {
+    "curve": {
+        "url": "https://api.curve.finance/api/getAllGauges",
+        "method": "GET",
+        "output_file": "curve.json"
+    },
+    "frax": {
+        "url": "https://api.frax.finance/v1/gauge/voter-info/0x0000000000000000000000000000000000000000",
+        "method": "GET",
+        "output_file": "frax.json"
+    },
+    "fxn": {
+        "url": "https://api.aladdin.club/api1/get_fx_gauge_list",
+        "method": "GET",
+        "output_file": "fxn.json"
+    },
+    "balancer": {
+        "url": "https://api-v3.balancer.fi/",
+        "method": "POST",
+        "output_file": "balancer.json",
+        "query": """
             query {
               veBalGetVotingList {
                 gauge {
@@ -83,70 +48,106 @@ def balancer():
                 chain
               }
             }
-            """
-            },
-        )
+        """
+    }
+}
 
-        if response.status_code == 200:
+
+class GaugeFetcher:
+    """Fetches gauge data from various DeFi protocols."""
+    
+    def __init__(self, gauges_dir: Path = GAUGES_DIR):
+        self.gauges_dir = gauges_dir
+        self.gauges_dir.mkdir(exist_ok=True)
+        
+    def write_gauges(self, data: Any, filename: str) -> None:
+        """Write gauge data to a JSON file."""
+        output_path = self.gauges_dir / filename
+        try:
+            with open(output_path, "w") as f:
+                json.dump(data, f, indent=4)
+            logger.info(f"Successfully wrote gauge data to {output_path}")
+        except Exception as e:
+            logger.error(f"Failed to write gauge data to {output_path}: {e}")
+            raise
+    
+    def fetch_simple(self, url: str, output_file: str) -> bool:
+        """Fetch data from a simple GET endpoint."""
+        try:
+            response = requests.get(url, timeout=TIMEOUT)
+            response.raise_for_status()
+            
+            data = response.json()
+            self.write_gauges(data, output_file)
+            return True
+            
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Failed to fetch data from {url}: {e}")
+            return False
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse JSON response from {url}: {e}")
+            return False
+    
+    def fetch_balancer(self) -> bool:
+        """Fetch Balancer gauge data using GraphQL."""
+        config = PROTOCOLS["balancer"]
+        
+        try:
+            response = requests.post(
+                config["url"],
+                json={"query": config["query"]},
+                timeout=TIMEOUT
+            )
+            response.raise_for_status()
+            
             data = response.json()
             if data and "data" in data and "veBalGetVotingList" in data["data"]:
-                writeGauges(data["data"]["veBalGetVotingList"], "balancer.json")
+                self.write_gauges(data["data"]["veBalGetVotingList"], config["output_file"])
+                return True
             else:
-                print(
-                    "Failed to fetch Balancer pools: API responded with success: false"
-                )
-        else:
-            print(
-                f"Failed to fetch Balancer pools: HTTP status code {response.status_code}"
-            )
-    except Exception as e:
-        print(f"Error fetching Balancer pools: {e}")
-
-def lit():
-    try:
-        response = requests.post(
-            "https://api.thegraph.com/subgraphs/name/bunniapp/bunni-mainnet",
-            json={
-                "query": """
-                query  {
-                    pools(first: 1000) {
-                        bunniTokens{
-                            name
-                            gauge {
-                                address
-                            }
-                        }
-                    }
-                }
-            """
-            },
-        )
-
-        if response.status_code == 200:
-            data = response.json()
-            if data and "data" in data and "pools" in data["data"] :
-                writeGauges(data["data"]["pools"], "lit.json")
+                logger.error("Failed to fetch Balancer pools: Invalid response structure")
+                return False
+                
+        except requests.exceptions.RequestException as e:
+            logger.error(f"Failed to fetch Balancer pools: {e}")
+            return False
+        except json.JSONDecodeError as e:
+            logger.error(f"Failed to parse Balancer response: {e}")
+            return False
+    
+    def fetch_all(self) -> Dict[str, bool]:
+        """Fetch gauge data from all configured protocols."""
+        results = {}
+        
+        for protocol, config in PROTOCOLS.items():
+            logger.info(f"Fetching {protocol} gauge data...")
+            
+            if protocol == "balancer":
+                results[protocol] = self.fetch_balancer()
             else:
-                print(
-                    "Failed to fetch Lit pools: API responded with success: false"
-                )
-        else:
-            print(
-                f"Failed to fetch Lit pools: HTTP status code {response.status_code}"
-            )
-    except Exception as e:
-        print(f"Error fetching Balancer pools: {e}")
+                results[protocol] = self.fetch_simple(config["url"], config["output_file"])
+                
+        return results
+
 
 def main():
-    cake()
-    balancer()
-    curve()
-    frax()
-    fxn()
-    lit()
-    fxn()
+    """Main function to fetch all gauge data."""
+    fetcher = GaugeFetcher()
+    results = fetcher.fetch_all()
+    
+    # Summary
+    successful = sum(1 for success in results.values() if success)
+    total = len(results)
+    
+    logger.info(f"\nFetch complete: {successful}/{total} protocols succeeded")
+    
+    if successful < total:
+        failed = [protocol for protocol, success in results.items() if not success]
+        logger.warning(f"Failed protocols: {', '.join(failed)}")
+        return 1
+    
+    return 0
 
 
-__name__ == "__main__" and main()
-
-#export PYTHONPATH=script/
+if __name__ == "__main__":
+    exit(main())

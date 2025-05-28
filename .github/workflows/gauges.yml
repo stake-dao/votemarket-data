@@ -1,4 +1,4 @@
-name: Cake gauges
+name: Update gauges for all protocols
 on:
   workflow_dispatch:
   schedule:
@@ -23,13 +23,7 @@ jobs:
       - name: execute gauges.py
         run: python gauges.py
 
-      - name: execute sushiTokens.py
-        run: python sushiTokens.py
-
-      - name: execute cakeTvls.py
-        run: python cakeTvls.py
-
-      - name: Commit and push changes to bribes repo
+      - name: Commit and push changes
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "Stake DAO Automation"
