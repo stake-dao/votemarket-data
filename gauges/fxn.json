@@ -101,7 +101,8 @@
             "name": "MIM+fxUSD",
             "lpAddress": "0xd7bf9bb6bd088317effd116e2b70ea3a054cbceb",
             "gauge": "0xDF7fbDBAE50C7931a11765FAEd9fe1A002605B55",
-            "type": "Liquidity Gauge"
+            "type": "Liquidity Gauge",
+            "isDirectGaugeStakeOnly": true
         },
         "0x5801Bb8f568979C722176Df36b1a74654A9C52b5": {
             "name": "eUSD+fxUSD",
@@ -125,19 +126,22 @@
             "name": "fxUSD Stability Pool V2.0",
             "lpAddress": "0x65C9A641afCEB9C0E6034e558A319488FA0FA3be",
             "gauge": "0xEd92dDe3214c24Ae04F5f96927E3bE8f8DbC3289",
-            "type": "Liquidity Gauge"
+            "type": "Liquidity Gauge",
+            "isDirectGaugeStakeOnly": true
         },
         "0x215D87bd3c7482E2348338815E059DE07Daf798A": {
             "name": "fxUSD Stability Pool V2.0 (Rewards FXN)",
             "lpAddress": "0x65C9A641afCEB9C0E6034e558A319488FA0FA3be",
             "gauge": "0x215D87bd3c7482E2348338815E059DE07Daf798A",
-            "type": "Liquidity Gauge"
+            "type": "Liquidity Gauge",
+            "isDirectGaugeStakeOnly": true
         },
         "0xa295829c082c4d21fe37dbc8c96bfa0ef6dbaa92": {
             "name": "USDN+fxUSD",
             "lpAddress": "0xB6aF437ceEa0DBeA524115eFC905F0F44fd1eBAF",
             "gauge": "0xa295829c082c4d21fe37dbc8c96bfa0ef6dbaa92",
-            "type": "Liquidity Gauge"
+            "type": "Liquidity Gauge",
+            "isDirectGaugeStakeOnly": true
         },
         "0x8d9186Fa822624bad50a5cB2545048CB26b4E65E": {
             "name": "reUSD+fxUSD",
@@ -155,49 +159,57 @@
             "name": "msUSD+fxUSD",
             "lpAddress": "0x138Bb0f3208bd729a561F3786DDb97BBc69e6628",
             "gauge": "0x2122a2bee97545595550b85379AC7676Fd21a5B4",
-            "type": "Liquidity Gauge"
+            "type": "Liquidity Gauge",
+            "isDirectGaugeStakeOnly": true
         },
         "0xeD9ED685F553B0827a58a918E64eC02E6FD55799": {
             "name": "ynUSDx+fxUSD",
             "lpAddress": "0x77145b34807d04fd35d85796cbc81fe65365704a",
             "gauge": "0xeD9ED685F553B0827a58a918E64eC02E6FD55799",
-            "type": "Liquidity Gauge"
+            "type": "Liquidity Gauge",
+            "isDirectGaugeStakeOnly": true
         },
         "0x0BbfD53Ec934e5d4d3d55dD860642aDD395De979": {
             "name": "ynRWAx+fxUSD",
             "lpAddress": "0xbdf86bd28cb3a8af5d46ccd2f56131be6718b1d8",
             "gauge": "0x0BbfD53Ec934e5d4d3d55dD860642aDD395De979",
-            "type": "Liquidity Gauge"
+            "type": "Liquidity Gauge",
+            "isDirectGaugeStakeOnly": true
         },
         "0xE534E5e86382d64133ecd6b7f717C69BEC8B40CA": {
             "name": "USDaf+fxUSD+BOLD+USDC",
             "lpAddress": "0x8B878AFE454e31CF0A79c6D7cf2f077DD286C12f",
             "gauge": "0xE534E5e86382d64133ecd6b7f717C69BEC8B40CA",
-            "type": "Liquidity Gauge"
+            "type": "Liquidity Gauge",
+            "isDirectGaugeStakeOnly": true
         },
         "0x7d4674b837429c44914961cb9F21dD6dEFd0eee0": {
             "name": "DOLA+fxSAVE",
             "lpAddress": "0x2b854e225d7282854819327D0CA5b8D8AA8CAaED",
             "gauge": "0x7d4674b837429c44914961cb9F21dD6dEFd0eee0",
-            "type": "Liquidity Gauge"
+            "type": "Liquidity Gauge",
+            "isDirectGaugeStakeOnly": true
         },
         "0xA3c0f7360b922136cc8B89063BE1e8daF70427bD": {
             "name": "fxUSD+frxUSD",
             "lpAddress": "0x851907CAC684797eee43669798D78004e269Cb5E",
             "gauge": "0xA3c0f7360b922136cc8B89063BE1e8daF70427bD",
-            "type": "Liquidity Gauge"
+            "type": "Liquidity Gauge",
+            "isDirectGaugeStakeOnly": true
         },
         "0x695C6F5ed9CEB6709E00C08e1326710F3169B922": {
             "name": "USDnr+fxUSD",
             "lpAddress": "0x3204d754a3003cEc155e2D8F44b3b48eD60b7Cc6",
             "gauge": "0x695C6F5ed9CEB6709E00C08e1326710F3169B922",
-            "type": "Liquidity Gauge"
+            "type": "Liquidity Gauge",
+            "isDirectGaugeStakeOnly": true
         },
         "0x288810cdbdFEd9EA3Be3cA4E421Ab795FD0669f3": {
             "name": "ETH+fxUSD",
             "lpAddress": "0xb2ee8f9622C5A480928836c0575df7d150f72d98",
             "gauge": "0x288810cdbdFEd9EA3Be3cA4E421Ab795FD0669f3",
-            "type": "Liquidity Gauge"
+            "type": "Liquidity Gauge",
+            "isDirectGaugeStakeOnly": true
         },
         "0xABc8cBbA768DA396626FAD97D0e61104aC1e7068": {
             "name": "fxUSD Staking Pool",
@@ -209,7 +221,8 @@
             "name": "OUSD+fxUSD",
             "lpAddress": "0xe2c27fd0e83da0348d58402dfb9c7d8b3773fd76",
             "gauge": "0xcF904d377604bCCcB328e51204CA30203F635259",
-            "type": "Liquidity Gauge"
+            "type": "Liquidity Gauge",
+            "isDirectGaugeStakeOnly": true
         }
     }
 }
